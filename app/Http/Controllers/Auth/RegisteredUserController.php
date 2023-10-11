@@ -58,4 +58,21 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
+
+    public function search(Request $request)
+    {
+        try {
+            $term = $request->query('term'); // Get the search term from the query parameter
+
+            // Perform the user search based on the provided term
+            $users = User::where('firstname', 'like', '%' . $term . '%')
+                ->orWhere('lastname', 'like', '%' . $term . '%')
+                ->get();
+
+            return response()->json(['users' => $users]);
+        } catch (\Exception $e) {
+            // Handle the exception and return an error response if needed
+            return response()->json(['error' => 'An error occurred while searching for users.'], 500);
+        }
+    }
 }

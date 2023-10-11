@@ -21,6 +21,9 @@ class UserFactory extends Factory
             'lastname' => fake()->name(),
             'firstname' => fake()->name(),
             'middlename' => fake()->name(),
+            'type' => fake()->randomElement($array = array ('patient','doctor','admin')),
+            'gender' => fake()->randomElement(['male', 'female']),//the gender does not match the name as it is.
+            'contact_no' => fake()->unique()->e164PhoneNumber(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

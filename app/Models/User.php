@@ -35,9 +35,23 @@ class User extends Authenticatable
     //     return $this->hasMany(Sale::class, 'user_id');
     // }
 
-    public function doctor(){
-        return $this->hasMany(Doctor::class, 'user_id');
+    // public function doctor(){
+    //     return $this->hasMany(Doctor::class, 'user_id');
+    // }
+
+    // public function appointment(){
+    //     return $this->hasMany(Appointment::class);
+    // }
+
+    public function doctor()
+    {
+        return $this->hasOne(Doctor::class);
     }
+
+    public function appointment()
+        {
+            return $this->hasMany(Appointment::class, 'user_id');
+        }
 
     /**
      * The attributes that should be hidden for serialization.

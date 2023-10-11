@@ -16,14 +16,14 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->date('date');
             $table->time('time');
-            $table->string('status');
+            $table->string('status')->default('Pending');
             $table->bigInteger('doc_id')->unsigned();
-            // $table->bigInteger('service_id')->unsigned();
+            $table->bigInteger('service_id')->unsigned();
             $table->string('reason')->nullable();
             $table->timestamps();
             $table->foreign('doc_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
-            // $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 

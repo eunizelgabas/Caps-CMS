@@ -24,51 +24,51 @@ class DoctorController extends Controller
 
     public function store(Request $request)
     {
-   $fields= $request->validate([
-        'firstname' => 'required|string|max:255',
-        'lastname' => 'required|string|max:255',
-        'suffix' => 'nullable|string|max:255',
-        'middlename' => 'nullable|string|max:255',
-        'gender' => 'required', // Add your allowed values for gender.
-        'contact_no' => 'required|max:11',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:8', // Adjust the minimum password length as needed.
-        'specialization' => 'required|string|max:255',
-        'selectedServiceIds' => 'required|array', // Assuming 'service' is an array of selected service IDs.
-    ]);
+        $fields= $request->validate([
+                'firstname' => 'required|string|max:255',
+                'lastname' => 'required|string|max:255',
+                'suffix' => 'nullable|string|max:255',
+                'middlename' => 'nullable|string|max:255',
+                'gender' => 'required',
+                'contact_no' => 'required|max:11',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8',
+                'specialization' => 'required|string|max:255',
+                'selectedServiceIds' => 'required|array', // Assuming 'service' is an array of selected service IDs.
+            ]);
 
-    // Create a new user
-    $user = User::create([
-        'firstname' => $request->input('firstname'),
-        'lastname' => $request->input('lastname'),
-        'suffix' => $request->input('suffix'),
-        'middlename' => $request->input('middlename'),
-        'gender' => $request->input('gender'),
-        'contact_no' => $request->input('contact_no'),
-        'email' => $request->input('email'),
-        'password' => bcrypt($request->input('password')),
-        // 'selectedServiceIds' => 'required|array', // Ensure that selectedServices is an array
-        // 'selectedServiceIds.*' => 'exists:services,id',
-        // Add other user fields as needed
-    ]);
+            // Create a new user
+            $user = User::create([
+                'firstname' => $request->input('firstname'),
+                'lastname' => $request->input('lastname'),
+                'suffix' => $request->input('suffix'),
+                'middlename' => $request->input('middlename'),
+                'gender' => $request->input('gender'),
+                'contact_no' => $request->input('contact_no'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+                // 'selectedServiceIds' => 'required|array', // Ensure that selectedServices is an array
+                // 'selectedServiceIds.*' => 'exists:services,id',
 
-
-    // Create a new doctor associated with the user
-    $doctor = new Doctor([
-        'specialization' => $request->input('specialization'),
-        'status' => 1, // You can adjust the status here or in the Doctor model as needed.
-    ]);
+            ]);
 
 
-   // Save the doctor first to get an ID.
+            // Create a new doctor associated with the user
+            $doctor = new Doctor([
+                'specialization' => $request->input('specialization'),
+                'status' => 1, // You can adjust the status here or in the Doctor model as needed.
+            ]);
 
-    $selectedServiceIds = $request->input('selectedServiceIds');
-    // Attach selected services to the doctor
-    $user->doctor()->save($doctor);
-    $doctor->services()->attach($selectedServiceIds);
 
-    return redirect('/doctor')->with('message', 'Doctor successfully created');
-}
+        // Save the doctor first to get an ID.
+
+            $selectedServiceIds = $request->input('selectedServiceIds');
+            // Attach selected services to the doctor
+            $user->doctor()->save($doctor);
+            $doctor->services()->attach($selectedServiceIds);
+
+            return redirect('/doctor')->with('message', 'Doctor successfully created');
+    }
 
 
     public function edit(Doctor $doctor){
@@ -130,4 +130,13 @@ class DoctorController extends Controller
         $serviceCount = $doctor->services->count();
         return inertia ('Doctor/Show', ['doctor'=> $doctor, 'serviceCount'=> $serviceCount]);
     }
+
+    public function getServices(Doctor $doctor)
+{
+    // Retrieve the services offered by the specified doctor
+    $services = $doctor->services;
+
+    // Return the services as JSON
+    return response()->json(['services' => $services]);
+}
 }

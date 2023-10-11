@@ -42,28 +42,6 @@
         selectedDoctorForDelete = doc
         showConfirm.value = true;
     }
-    // const getStatusText = (status) => {
-    //   return status === 1 ? 'Active' : 'Inactive';
-    // };
-
-    // function openInactiveDoctorsModal() {
-    //     showConfirm.value = true;
-    // }
-
-
-    // const activateDoctor  = () => {
-    //         // Send a request to activate the doctor's status using Inertia.js
-    //          router.post(`/doctor/${props.doctors.id}/activate`);
-    //         // Reload the page or update the doctor data as needed
-    //         router.reload();
-    //     };
-
-    //     const deactivateDoctor = () => {
-    //         // Send a request to deactivate the doctor's status using Inertia.js
-    //          router.post(`/doctor/${props.doctors.id}/deactivate`);
-    //         // Reload the page or update the doctor data as needed
-    //         router.reload();
-    //     };
 
     const submit = () =>{
         if(selectedDoctor) {
