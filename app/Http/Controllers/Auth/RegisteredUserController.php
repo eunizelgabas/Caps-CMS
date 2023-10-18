@@ -64,9 +64,12 @@ class RegisteredUserController extends Controller
         try {
             $term = $request->query('term'); // Get the search term from the query parameter
 
-            // Perform the user search based on the provided term
-            $users = User::where('firstname', 'like', '%' . $term . '%')
-                ->orWhere('lastname', 'like', '%' . $term . '%')
+            // Perform the user search based on the provided term and user type "patient"
+            $users = User::where('type', 'patient')
+                ->where(function ($query) use ($term) {
+                    $query->where('firstname', 'like', '%' . $term . '%')
+                        ->orWhere('lastname', 'like', '%' . $term . '%');
+                })
                 ->get();
 
             return response()->json(['users' => $users]);

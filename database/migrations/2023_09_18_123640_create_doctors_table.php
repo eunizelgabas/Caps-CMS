@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('specialization');
             // $table->bigInteger('service_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->boolean('status')->default(1)->comment("1-active, 0-inactive");
+            // $table->boolean('status')->default(1)->comment("1-active, 0-inactive");
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
             // $table->foreign('service_id')->references('id')->on('services');

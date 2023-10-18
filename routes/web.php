@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TemporaryStockController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -101,6 +102,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/appointment/{appointment}',[AppointmentController::class, 'update']);
     Route::delete('/appointment/{appointment}', [AppointmentController::class, 'destroy']);
     // Route::get('/api/doctor/{doctorId}/services',[AppointmentController::class, 'getDoctorServices']);
+
+    Route::get('/users',[UserController::class, 'index'])->name('user.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users',[UserController::class, 'store'])->name('user.store');
+    Route::get('/users/edit/{user}', [UserController::class, 'edit']);
+    Route::put('/users/{user}',[UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
 
 

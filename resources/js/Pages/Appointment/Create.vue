@@ -44,11 +44,15 @@
         }
     };
 
+
+
     const selectUser = (user) => {
+
         // Set the selected user and populate the form fields
         selectedUser.id = user.id;
         selectedUser.fullname = `${user.firstname} ${user.lastname}`;
         form.user_id = user.id; // Populate the user_id field with the selected user's ID
+
     };
 
     const fetchServicesByDoctorId = async () => {
@@ -86,14 +90,32 @@
         <div>
             <div class="w-full mt-10 mx-auto px-4 ">
 
-                <input v-model="searchTerm" @input="searchUsers" placeholder="Search users by name" />
+                <!-- <input v-model="searchTerm" @input="searchUsers" placeholder="Search patients by name" /> -->
 
                 <!-- Search results -->
-                <ul>
+                <!-- <ul class="bg-gray-100 p-5">
                   <li v-for="user in searchResults" :key="user.id" @click="selectUser(user)">
                     {{ user.firstname }} {{ user.lastname }}
                   </li>
-                </ul>
+                </ul> -->
+                <!-- component -->
+                <div class="">
+                    <div class="inline-flex flex-col justify-center relative text-gray-500">
+                        <div class="relative">
+                            <input type="text" v-model="searchTerm" @input="searchUsers" placeholder="Search patients by name" class="p-2 pl-8 rounded border border-gray-200 bg-gray-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent"/>
+                            <svg class="w-4 h-4 absolute left-2.5 top-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="mt-2 text-sm">Patients:</h3>
+                        <ul class="bg-white border border-gray-100 w-full mt-2 ">
+                            <li v-for="user in searchResults" :key="user.id" @click="selectUser(user)" class="pl-8 pr-2 py-1 border-b-2 border-gray-100 relative cursor-pointer hover:bg-yellow-50 hover:text-gray-900">
+                                <b>{{ user.firstname }} {{ user.lastname }}</b>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
 
                 <form @submit.prevent="submit">
                     <div class="space-y-6">
@@ -107,7 +129,7 @@
 
 
                         <div class="sm:col-span-1">
-                            <label for="time" class="block text-sm font-medium leading-6 text-gray-900">User</label>
+                            <label for="time" class="block text-sm font-medium leading-6 text-gray-900">Patient Name</label>
                             <div class="mt-2">
                               <input id="time" v-model="selectedUser.fullname" name="time" type="text" readonly class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                               <div class="text-sm text-red-500 italic" v-if="form.errors.time">{{ form.errors.time }}</div>

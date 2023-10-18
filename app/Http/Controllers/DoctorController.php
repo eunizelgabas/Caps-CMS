@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
+use Spatie\Permission\Models\Role;
 
 class DoctorController extends Controller
 {
@@ -47,9 +48,7 @@ class DoctorController extends Controller
                 'contact_no' => $request->input('contact_no'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
-                // 'selectedServiceIds' => 'required|array', // Ensure that selectedServices is an array
-                // 'selectedServiceIds.*' => 'exists:services,id',
-
+                'type' => 'doctor'
             ]);
 
 
@@ -66,6 +65,9 @@ class DoctorController extends Controller
             // Attach selected services to the doctor
             $user->doctor()->save($doctor);
             $doctor->services()->attach($selectedServiceIds);
+
+            $doctorRole = Role::where('name', 'doctor')->first();
+            $user->assignRole($doctorRole);
 
             return redirect('/doctor')->with('message', 'Doctor successfully created');
     }
@@ -93,6 +95,7 @@ class DoctorController extends Controller
             'contact_no' => $request->contact_no,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'type' => 'doctor'
         ]);
 
         // Update doctor details

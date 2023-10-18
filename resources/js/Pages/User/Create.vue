@@ -4,51 +4,57 @@
     import { Link , Head, usePage} from '@inertiajs/vue3';
     import { useForm } from '@inertiajs/vue3';
     // import Multiselect from 'vue-multiselect'
-    const { data } = usePage().props;
+    // const { data } = usePage().props;
     let form = useForm({
         doctor_id: '',
         lastname: '',
         firstname:'',
+        middlename: '',
         suffix: '',
         email:'',
         password:'',
         password_confirmation:'',
         status:'',
         gender:'',
+        type: '',
+        role: '',
         specialization: '',
         contact_no: '',
-
         selectedServiceIds: []
     })
 
     let props = defineProps({
-        doctors: Array,
-        user:Object,
+        roles:Array,
+        doctor:Object,
         services: Array
 
     })
 
-    // const services = ref(data.services);
+    function toggleFields(){
+        if (form.type !== 'doctor') {
+        form.specialization = '';
+        form.services = '';
+      }
+    }
 
     const submit = () =>{
-        form.post('/doctor')
-
+        form.post('/users')
     }
 
 </script>
 
 <template>
-    <Head title="Create Doctor"/>
+    <Head title="Create User"/>
     <Sidebar>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create Doctor</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create User</h2>
         </template>
         <div>
             <div class="w-full mt-10 mx-auto px-4 ">
                 <form @submit.prevent="submit">
                     <div class="space-y-6">
                         <div class="block pl-12 font-semibold text-xl self-start text-gray-700">
-                            <h1 class="leading-relaxed">Doctor Details Form</h1>
+                            <h1 class="leading-relaxed">User Details Form</h1>
                             <hr>
                           </div>
                       <div class="border-b border-gray-900/10 pb-12">
@@ -61,7 +67,13 @@
                               <div class="text-sm text-red-500 italic" v-if="form.errors.firstname">{{ form.errors.firstname }}</div>
                             </div>
                           </div>
-
+                          <div class="sm:col-span-1">
+                            <label for="middlename" class="block text-sm font-medium leading-6 text-gray-900">Middlename</label>
+                            <div class="mt-2">
+                              <input type="text" v-model="form.middlename" name="middlename" id="middlename" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <div class="text-sm text-red-500 italic" v-if="form.errors.middlename">{{ form.errors.middlename }}</div>
+                            </div>
+                          </div>
                           <div class="sm:col-span-1">
                             <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
                             <div class="mt-2">
@@ -82,7 +94,7 @@
                             <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Gender</label>
                             <div class="mt-2">
                               <select id="gender" v-model="form.gender" name="gender" autocomplete="gender" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                <option selected disabled   >Select Gender</option>
+                                <option selected disabled>Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                               </select>
@@ -90,37 +102,27 @@
                             </div>
                           </div>
 
-                          <div class="m:col-span-2">
+                          <!-- <div class="m:col-span-2">
                             <label for="services" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
                             <div class="mt-2">
-                                <select id="services" v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
+                                <select id="services"  v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
                                   <option selected disabled >Select services</option>
                                   <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
                                 </select>
                                 <div class="text-sm text-red-500 italic" v-if="form.errors.services">{{ form.errors.services }}</div>
                               </div>
-                              <!-- <div class="w-full">
-                                <label class="inline-block text-sm text-gray-600" for="Multiselect"
-                                  >Select multiple roles</label
-                                >
-                                <div class="relative flex w-full">
-                                  <select
-                                    id="select-role"
-                                    name="selectedServiceIds[]"
-                                    multiple
-                                    placeholder="Select roles..."
-                                    autocomplete="off"
-                                    class="block w-full rounded-sm cursor-pointer focus:outline-none"
 
-                                  >
-                                    <option value="1">super admin</option>
-                                    <option value="2">admin</option>
-                                    <option value="3">writer</option>
-                                    <option value="4">user</option>
-                                  </select>
-                                </div>
-                              </div> -->
-
+                          </div> -->
+                          <div class="m:col-span-1">
+                            <label for="roles" class="block text-sm font-medium leading-6 text-gray-900">Roles</label>
+                            <div class="mt-2">
+                              <select id="role" v-model="form.role" name="role" autocomplete="role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                <option selected disabled   >Select Role</option>
+                                <option v-for="role in roles" :key="role.id" :value="role.name">{{ role.name }}</option>
+                                <!-- <option value="Role">Patient</option> -->
+                              </select>
+                              <div class="text-sm text-red-500 italic" v-if="form.errors.role">{{ form.errors.role }}</div>
+                            </div>
                           </div>
 
                           <div class="sm:col-span-2">
@@ -131,16 +133,37 @@
                             </div>
                           </div>
 
-                          <div class="sm:col-span-1">
-                            <label for="specialization" class="block text-sm font-medium leading-6 text-gray-900">Specialization</label>
+                          <div class="m:col-span-1">
+                            <label for="type" class="block text-sm font-medium leading-6 text-gray-900">Type</label>
                             <div class="mt-2">
-                              <input id="specialization" v-model="form.specialization" name="specialization" type="text" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <select id="type" v-model="form.type" name="type" @change="toggleFields" autocomplete="type" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                                <option selected disabled>Select Type</option>
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="admin">Admin</option>
+                              </select>
+                              <div class="text-sm text-red-500 italic" v-if="form.errors.type">{{ form.errors.type }}</div>
+                            </div>
+                          </div>
+                          <div class="sm:col-span-1" v-if="form.type === 'doctor'">
+                            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Specialization</label>
+                            <div class="mt-2">
+                              <input id="specialization" v-model="form.specialization" name="specialization" type="text" autocomplete="specialization" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                               <div class="text-sm text-red-500 italic" v-if="form.errors.specialization">{{ form.errors.specialization }}</div>
                             </div>
                           </div>
+                          <div class="m:col-span-1" v-if="form.type === 'doctor'">
+                            <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
+                            <div class="mt-2">
+                                <select id="services" v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
+                                    <option selected disabled >Select services</option>
+                                    <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
+                                  </select>
+                              <div class="text-sm text-red-500 italic" v-if="form.errors.service_id">{{ form.errors.service_id }}</div>
+                            </div>
+                          </div>
 
-
-                          <div class="sm:col-span-2">
+                          <div class="sm:col-span-1">
                             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                             <div class="mt-2">
                               <input id="email" v-model="form.email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">

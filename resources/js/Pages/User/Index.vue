@@ -1,71 +1,50 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
+    import Modal from  '@/Components/Modal.vue';
+    import DangerButton from '@/Components/DangerButton.vue';
+    import SecondaryButton from '@/Components/SecondaryButton.vue';
     import { ref } from 'vue';
     import { Link, router, useForm, Head } from '@inertiajs/vue3';
 
     let showConfirm = ref(false)
-    let selectedDoctorForDelete = null
-    let selectedDoctor = null
-
-
-    let form = useForm({
-        lastname: '',
-        firstname: '',
-        status: '',
-        email:'',
-        gender: '',
-        specialization: '',
-        contact_no: '',
-    })
+    let selectedUserForDelete = null
+    let deleteForm = useForm({});
 
     let props = defineProps({
-        doctors: Array,
-        user:Object,
-        services:Object
+        users:Array,
+
     })
 
     function closeModal(){
         showConfirm.value = false;
     }
-    function edit(doc) {
-    form.lastname = doc.lastname,
-    form.firstname = doc.firstname,
-    form.email =  doc.email,
-    form.gender =  doc.gender,
-    form.status = doc.status,
-    form.specialization = doc.qty
-    form.contact_no = doc.qty
-    selectedDoctor = doc
-    }
 
-    function remove(doc) {
-        selectedDoctorForDelete = doc
+    function remove(user) {
+        selectedUserForDelete = user
         showConfirm.value = true;
+        // console.log(props.errors)
     }
 
-    const submit = () =>{
-        if(selectedDoctor) {
-            form.put('/doctor/' + selectedDoctor.id)
-
-            }else {
-            form.post('/doctor')
-        }
+    function deleteUser(){
+        deleteForm.delete('/users/' + selectedUserForDelete.id)
+        showConfirm.value = false;
     }
-    //const inactiveDoctors = ref([]);
+
+
 </script>
 
 <template>
     <Sidebar>
-        <Head title="Doctor"/>
+        <Head title="Users"/>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Doctor</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Users</h2>
         </template>
 
         <div class="px-2 mt-5">
             <div class="p-4 mx-2">
                 <div class="flex ">
                     <h1 class="text-3xl font-medium text-gray-700 "></h1>
-                    <Link href="/doctor/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >Add Doctor</Link>
+                    <Link href="/users/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >Add User</Link>
                 </div>
             <div class="w-full px-2">
                 <div class="h-12">
@@ -76,83 +55,70 @@
                             <thead>
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                     <th class="py-3 px-6 text-left">Id</th>
-                                    <th class="py-3 px-6 text-center">Doctor Name</th>
+                                    <th class="py-3 px-6 text-center">FullName</th>
                                     <th class="py-3 px-6 text-center">Gender</th>
-                                    <th class="py-3 px-6 text-center">Specialization</th>
-                                    <th class="py-3 px-6 text-center">Services</th>
+                                    <th class="py-3 px-6 text-center">Type</th>
+                                    <th class="py-3 px-6 text-center">Email</th>
                                     <th class="py-3 px-6 text-center">Contact No</th>
+                                    <th class="py-3 px-6 text-center">Role</th>
                                     <th class="py-3 px-6 text-center">Status</th>
                                     <th class="py-3 px-6 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600 text-sm font-light" >
 
-                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="doc in doctors" :key="doc.id">
+                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="user in users" :key="user.id">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
 
-                                            <p class="font-medium">{{ doc.id }}</p>
+                                            <p class="font-medium">{{ user.id }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ doc.user.firstname }} {{ doc.user.lastname }}</p>
+                                            <p class="font-medium">{{user.firstname }} {{user.middlename}} {{ user.lastname}} {{ user.suffix }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ doc.user.gender }}</p>
+                                            <p class="font-medium">{{ user.gender }}</p>
                                         </div>
                                     </td>
 
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ doc.specialization }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center" v-for="service in doc.services" :key="service.id">
-                                            <p class="font-medium">{{ service.name }}</p>
+                                            <p class="font-medium">{{ user.type }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ doc.user.contact_no }}</p>
+                                            <p class="font-medium">{{ user.email }}</p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-6 text-center">
+                                        <div class="flex items-center justify-center">
+                                            <p class="font-medium">{{ user.contact_no }}</p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-6 text-center">
+                                        <div class="flex items-center justify-center" v-for="role in user.roles" :key="role.id">
+                                            <p class="font-medium">{{ role.name }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
                                             <p class="font-medium">
-                                                <span class=" remarks-cell bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ doc.user.status ? 'Active' : 'Inactive' }}</span>
+                                                <span class=" remarks-cell bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ user.status ? 'Active' : 'Inactive' }}</span>
                                             </p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex item-center justify-center">
-                                            <!-- <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
-                                                <a href="#" class="btn" @click="toggleStatus(doc)">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-6 6m0 0l-6-6m6 6V9a6 6 0 0112 0v3" />
-                                                      </svg>
-                                                </a>
-                                            </div> -->
+
                                             <div class="flex item-center justify-center">
-                                                <!-- <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110" v-if="!doc.status">
-                                                    <a href="#" class="btn" @click="activateDoctor">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-6 6m0 0l-6-6m6 6V9a6 6 0 0112 0v3" />
-                                                          </svg>
-                                                    </a>
-                                                </div>
-                                                <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110" v-if="doc.status">
-                                                    <a href="#" class="btn" @click="deactivateDoctor">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-6 6m0 0l-6-6m6 6V9a6 6 0 0112 0v3" />
-                                                          </svg>
-                                                    </a>
-                                                </div> -->
+
                                                 <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                                    <Link :href="'/doctor/show/'+ doc.id" title="Show Details">
+                                                    <Link :href="'/user/show/'+ user.id" title="Show Details">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -163,18 +129,41 @@
                                             </div>
                                             </div>
                                             <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
-                                                <Link :href=" '/doctor/edit/' + doc.id" class="btn" title="Edit Doctor">
+                                                <Link :href=" '/users/edit/' + user.id" class="btn" title="Edit Doctor">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                     </svg>
                                                 </Link>
                                             </div>
                                             <div class="w-4  ml-2 mr-2 transform hover:text-red-500 hover:scale-110">
-                                                <Link href="#" @click="remove(doc)" class="btn" title="Delete Doctor">
+                                                <a href="#" @click="remove(user)" class="btn" title="Delete Category">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
-                                                </Link>
+                                                </a>
+                                                <Modal :show="showConfirm" @close="closeModal">
+                                                    <div class="p-4 sm:p-10 text-center overflow-y-auto">
+                                                        <!-- Icon -->
+                                                        <span class="mb-4 inline-flex justify-center items-center w-[62px] h-[62px] rounded-full border-4 border-red-50 bg-red-100 text-red-500">
+                                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                                                        </svg>
+                                                        </span>
+                                                        <!-- End Icon -->
+
+                                                        <h3 class="mb-2 text-2xl font-bold text-gray-800">
+                                                            Delete User
+                                                        </h3>
+                                                        <p class="text-gray-500">
+                                                            Are you sure you want like to delete this User?
+                                                        </p>
+
+                                                        <div class="mt-6 flex justify-center gap-x-4">
+                                                            <SecondaryButton @click="closeModal">Cancel</SecondaryButton>
+                                                            <DangerButton @click="deleteUser()">Delete</DangerButton>
+                                                        </div>
+                                                    </div>
+                                                </Modal>
                                             </div>
                                         </div>
                                     </td>
