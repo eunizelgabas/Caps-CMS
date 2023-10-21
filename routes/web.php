@@ -101,7 +101,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/appointment/edit/{appointment}', [AppointmentController::class, 'edit']);
     Route::put('/appointment/{appointment}',[AppointmentController::class, 'update']);
     Route::delete('/appointment/{appointment}', [AppointmentController::class, 'destroy']);
-    // Route::get('/api/doctor/{doctorId}/services',[AppointmentController::class, 'getDoctorServices']);
+    Route::get('/appointment/show/{appointment}', [AppointmentController::class, 'show']);
+    Route::post('/appointment/accept/{appointment}', [AppointmentController::class, 'accept']);
+    Route::post('/appointment/cancel/{appointment}', [AppointmentController::class, 'cancel']);
 
     Route::get('/users',[UserController::class, 'index'])->name('user.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('user.create');

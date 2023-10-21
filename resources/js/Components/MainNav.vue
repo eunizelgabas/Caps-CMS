@@ -1,16 +1,18 @@
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
     defineProps({
-        collapse:Boolean
+        collapse:Boolean,
+        
     })
     let show = ref(false);
 
     const isOpen = () => {show.value = !show.value};
 
-
+   
+    
 </script>
 <template>
     <div>
@@ -19,7 +21,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
               <li class="px-5">
                 <div class="flex flex-row items-center h-8">
                   <div class="text-m font-light tracking-wide text-white" v-show="!collapse">
-                    Adminstrator
+                   Administrator
                   </div>
                 </div>
               </li>
@@ -32,7 +34,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                   <span class="ml-2 text-m tracking-wide truncate" v-show="!collapse">Dashboard</span>
                 </Link>
               </li>
-              <li>
+              <li v-if="$page.props.auth.permissions.includes('manage-patient')">
                 <Link  href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                   <span class="inline-flex justify-center items-center ml-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -44,7 +46,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                 </Link>
               </li>
               <li>
-                <Link :href="route('doctor.index')" class=" relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                <Link v-if="$page.props.auth.permissions.includes('manage-doctors')" :href="route('doctor.index')" class=" relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                   <span class="inline-flex justify-center items-center ml-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -54,7 +56,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                   <span class="ml-2 text-m tracking-wide truncate" v-show="!collapse">Doctor</span>
                 </Link>
               </li>
-              <li>
+              <li v-if="$page.props.auth.permissions.includes('manage-medicine')">
                 <div>
 
                 <button  @click="isOpen" class="relative flex flex-row items-center cursor-pointer w-full h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
@@ -66,13 +68,13 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                       <span class="ml-2 text-m tracking-wide truncate" v-show="!collapse">Medicine</span>
                   </button>
                   <div v-show="show"  class="flex justify-start ml-3 flex-col w-full md:w-auto items-start pb-1 ">
-                        <Link :href="route('category.index')" class="flex justify-start items-center space-x-6 hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6 rounded px-3 py-2 w-full">
+                        <Link v-if="$page.props.auth.permissions.includes('manage-category')" :href="route('category.index')" class="flex justify-start items-center space-x-6 hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6 rounded px-3 py-2 w-full">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                             </svg>
                         <span class="text-base leading-4" v-show="!collapse">Category</span>
                         </Link>
-                        <Link :href="route('type.index')" class="flex justify-start items-center space-x-6 hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6 rounded px-3 py-2 w-full">
+                        <Link v-if="$page.props.auth.permissions.includes('manage-type')" :href="route('type.index')" class="flex justify-start items-center space-x-6 hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6 rounded px-3 py-2 w-full">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
                             </svg>
@@ -115,7 +117,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                   </div>
                 </div>
               </li>
-              <li>
+              <li v-if="$page.props.auth.permissions.includes('add-appointment')">
                 <Link :href="route('appointment.index')" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                   <span class="inline-flex justify-center items-center ml-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -126,7 +128,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                   <span class="ml-2 text-m tracking-wide truncate" v-show="!collapse">Appointment</span>
                 </Link>
               </li>
-              <li>
+              <li v-if="$page.props.auth.permissions.includes('manage-service')">
                 <Link :href="route('service.index')" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                   <span class="inline-flex justify-center items-center ml-4">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -145,7 +147,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                   <span class="ml-2 text-m tracking-wide truncate" v-show="!collapse">Reports</span>
                 </Link>
               </li>
-              <li>
+              <li v-if="$page.props.auth.permissions.includes('manage-user')">
                 <Link :href="route('user.index')" class=" relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                     <span class="inline-flex justify-center items-center ml-4">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

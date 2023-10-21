@@ -13,6 +13,6 @@ class MedCategory extends Model
 
     public function medicine()
     {
-        return $this->hasMany(Medicine::class, 'med_id');
+        return $this->hasMany(Medicine::class, 'cat_id');
     }
 }

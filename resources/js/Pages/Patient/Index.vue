@@ -1,4 +1,9 @@
 <script setup>
+
+</script>
+
+<template>
+    <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
     import Modal from  '@/Components/Modal.vue';
     import DangerButton from '@/Components/DangerButton.vue';
@@ -151,7 +156,7 @@
                                                             Delete User
                                                         </h3>
                                                         <p class="text-gray-500">
-                                                            Are you sure you want like to delete this User?
+                                                            Are you sure you want like to delete this Patient?
                                                         </p>
 
                                                         <div class="mt-6 flex justify-center gap-x-4">
@@ -173,4 +178,6 @@
             </div>
         </div>
     </Sidebar>
+</template>
+
 </template>

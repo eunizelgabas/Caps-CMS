@@ -25,3 +25,5 @@ Route::post('/temporary-stocks', [TemporaryStockController::class, 'store']);
 Route::get('/doctors/{doctor}/services', [DoctorController::class, 'getServices']);
 
 Route::get('/users/search', [RegisteredUserController::class, 'search']);
+
+Route::get('/get-data', [DoctorController::class, 'getDoctorServices']);

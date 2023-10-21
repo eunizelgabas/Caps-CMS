@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class DoctorController extends Controller
 {
@@ -142,4 +143,30 @@ class DoctorController extends Controller
     // Return the services as JSON
     return response()->json(['services' => $services]);
 }
+
+public function getDoctorServices()
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('doctor')) {
+            $doctor = Doctor::where('user_id', $user->id)->with('services')->first();
+
+            if ($doctor) {
+                $doctorName = $user->firstname . ' ' . $user->lastname;
+                $services = $doctor->services;
+
+                return response()->json([
+                    'isDoctor' => true,
+                    'doctorName' => $doctorName,
+                    'services' => $services,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'isDoctor' => false,
+            'doctorName' => '',
+            'services' => [],
+        ]);
+    }
 }

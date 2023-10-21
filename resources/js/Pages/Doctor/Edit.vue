@@ -97,27 +97,7 @@
                                 </select>
                                 <div class="text-sm text-red-500 italic" v-if="form.errors.services">{{ form.errors.services }}</div>
                               </div>
-                              <!-- <div class="w-full">
-                                <label class="inline-block text-sm text-gray-600" for="Multiselect"
-                                  >Select multiple roles</label
-                                >
-                                <div class="relative flex w-full">
-                                  <select
-                                    id="select-role"
-                                    name="selectedServiceIds[]"
-                                    multiple
-                                    placeholder="Select roles..."
-                                    autocomplete="off"
-                                    class="block w-full rounded-sm cursor-pointer focus:outline-none"
 
-                                  >
-                                    <option value="1">super admin</option>
-                                    <option value="2">admin</option>
-                                    <option value="3">writer</option>
-                                    <option value="4">user</option>
-                                  </select>
-                                </div>
-                              </div> -->
 
                           </div>
 

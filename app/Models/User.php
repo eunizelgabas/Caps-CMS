@@ -54,6 +54,11 @@ class User extends Authenticatable
             return $this->hasMany(Appointment::class, 'user_id');
         }
 
+        // public function hasRole($role)
+        // {
+        //     // Implement your logic here to check if the user has the given role.
+        //     return $this->role === $role;
+        // }
     /**
      * The attributes that should be hidden for serialization.
      *

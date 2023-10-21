@@ -16,33 +16,33 @@ class RolesSeeder extends Seeder
     public function run(): void
     {
         $role_admin     =   Role::create(['name' =>'admin']);
-        $role_student   =   Role::create(['name' =>'student']);
+        $role_patient   =   Role::create(['name' =>'patient']);
         $role_doctor    =   Role::create(['name' =>'doctor']);
 
-        $manage_medicine = Permission::create(['name' => 'manage medicine']);
-        $manage_patient = Permission::create(['name' => 'manage patient']);
-        $manage_service = Permission::create(['name' => 'manage service']);
-        $manage_doctors = Permission::create(['name' => 'manage doctors']);
-        $manage_category = Permission::create(['name' => 'manage category']);
-        $manage_type = Permission::create(['name' => 'manage type']);
-        $manage_appointment = Permission::create(['name' => 'manage appointment']);
-        $manage_user =  Permission::create(['name' => 'manage user']);
-        $add_appointment =  Permission::create(['name' => 'add appointment']);
-        $edit_appointment =  Permission::create(['name' => 'edit appointment']);
-        $show_appointment =  Permission::create(['name' => 'show appointment']);
-        $delete_appointment =  Permission::create(['name' => 'delete appointment']);
+        $manage_medicine = Permission::create(['name' => 'manage-medicine']);
+        $manage_patient = Permission::create(['name' => 'manage-patient']);
+        $manage_service = Permission::create(['name' => 'manage-service']);
+        $manage_doctors = Permission::create(['name' => 'manage-doctors']);
+        $manage_category = Permission::create(['name' => 'manage-category']);
+        $manage_type = Permission::create(['name' => 'manage-type']);
+        $manage_appointment = Permission::create(['name' => 'manage-appointment']);
+        $manage_user =  Permission::create(['name' => 'manage-user']);
+        $add_appointment =  Permission::create(['name' => 'add-appointment']);
+        $edit_appointment =  Permission::create(['name' => 'edit-appointment']);
+        $show_appointment =  Permission::create(['name' => 'show-appointment']);
+        $delete_appointment =  Permission::create(['name' => 'delete-appointment']);
 
         $permission_admin =  [ $manage_medicine, $manage_patient,$manage_service,$manage_doctors,
-                                $manage_category, $manage_type, $manage_appointment, $manage_user ];
+                                $manage_category, $manage_type, $add_appointment, $manage_user, $edit_appointment, $show_appointment, $delete_appointment ];
 
-        $permission_doctor =  [$manage_appointment, $manage_patient ];
+        $permission_doctor =  [$add_appointment, $manage_patient,$edit_appointment, $show_appointment, $delete_appointment ];
 
         $role_admin->syncPermissions($permission_admin);
         $role_doctor->syncPermissions($permission_doctor);
-        $role_student->givePermissionTo($add_appointment, $edit_appointment, $show_appointment, $delete_appointment);
+        $role_patient->givePermissionTo($add_appointment, $edit_appointment, $delete_appointment);
 
         User::find(1)->assignRole($role_admin);
-        User::find(2)->assignRole($role_student);
+        User::find(2)->assignRole($role_patient);
         User::find(3)->assignRole($role_doctor);
     }
 }

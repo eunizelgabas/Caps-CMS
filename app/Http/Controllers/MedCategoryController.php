@@ -21,7 +21,9 @@ class MedCategoryController extends Controller
             'medcategories' => MedCategory::query()
                     ->when(HttpRequest::input('search'), function ($query, $search) {
                         $query->where('name', 'like', '%' . $search . '%');
-                    })->paginate(6)
+                    })
+                    ->withCount('medicine')
+                    ->paginate(6)
                     ->withQueryString(),
                     'filters' => HttpRequest::only(['search'])
                     // $hidePagination = $medcategories->isEmpty() || $medcategories->count() <= $medcategories->perPage()
@@ -57,7 +59,7 @@ class MedCategoryController extends Controller
 
         MedCategory::create($fields);
 
-        return redirect('/category')->with('message', 'Category successfully created');
+        return redirect('/category')->with('success', 'Category successfully created');
     }
 
     public function update(Request $request, MedCategory $medcategory){
@@ -66,19 +68,26 @@ class MedCategoryController extends Controller
         ]);
 
         $medcategory->update($fields);
-        return redirect('/category')->with('message', "You successfully updated the medicine category");
+        return redirect('/category')->with('success', "You successfully updated the medicine category");
     }
 
     public function destroy(MedCategory $medcategory) {
 
-        $medc= $medcategory->medicine()->count();
+        // $medc= $medcategory->medicine()->count();
 
-        if( $medc > 0 ){
-            return back()->withErrors(['GeneralErrors' => "You cannot delete the medicine category $medc->name because it has $medc medicines ."]);
+        // if( $medc > 0 ){
+        //     return back()->withErrors(['GeneralErrors' => "You cannot delete the medicine category $medc->name because it has $medc medicines ."]);
+        // }
+
+        // $medcategory->delete();
+
+        // return back();
+        if(!$medcategory->medicine()->exists()) {
+            $medcategory->delete();
+
+            return back()->with('success', 'Category deleted successfully.');
+        } else {
+            return back()->with('error', 'Sorry, this category cannot be deleted because it contains existing medicines in the system.');
         }
-
-        $medcategory->delete();
-
-        return back();
     }
 }

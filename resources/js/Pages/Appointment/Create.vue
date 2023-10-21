@@ -1,9 +1,9 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
-    import { reactive, ref } from 'vue';
+    import { ref, reactive, computed, watch, onMounted } from 'vue';
+    import axios from 'axios';
     import { Link , Head} from '@inertiajs/vue3';
     import { useForm } from '@inertiajs/vue3';
-    import axios from 'axios';
 
 
 
@@ -11,7 +11,6 @@
        'date' : '',
        'time' : '',
        'user_id': '',
-    //    'status': '',
        'reason': '',
        'doc_id': '',
        'service_id': ''
@@ -22,7 +21,10 @@
         appointment: Array,
         doctors: Array,
         services: Object,
-        users:Array
+        users:Array,
+        isAdminOrDoctor:Boolean,
+        isDoctor: Boolean,
+
     });
 
     const availableServices = ref([]);
@@ -43,7 +45,6 @@
             console.error('Error searching for users:', error);
         }
     };
-
 
 
     const selectUser = (user) => {
@@ -73,6 +74,18 @@
         }
     };
 
+    const isAdminOrDoctor = props.isAdminOrDoctor;
+
+    onMounted(() => {
+  // Fetch services based on the logged-in user's role
+  if (props.isDoctor) {
+    // User is a doctor, set doctor and services automatically
+    const doctor = props.doctors[0]; // You might need to get the correct doctor based on your data
+    form.doc_id = doctor.id;
+    availableServices.value = doctor.services;
+  }
+});
+
     const submit = () =>{
         console.log(props.appointment);
         form.post('/appointment')
@@ -90,16 +103,9 @@
         <div>
             <div class="w-full mt-10 mx-auto px-4 ">
 
-                <!-- <input v-model="searchTerm" @input="searchUsers" placeholder="Search patients by name" /> -->
 
-                <!-- Search results -->
-                <!-- <ul class="bg-gray-100 p-5">
-                  <li v-for="user in searchResults" :key="user.id" @click="selectUser(user)">
-                    {{ user.firstname }} {{ user.lastname }}
-                  </li>
-                </ul> -->
                 <!-- component -->
-                <div class="">
+                <div class="" v-if="isAdminOrDoctor">
                     <div class="inline-flex flex-col justify-center relative text-gray-500">
                         <div class="relative">
                             <input type="text" v-model="searchTerm" @input="searchUsers" placeholder="Search patients by name" class="p-2 pl-8 rounded border border-gray-200 bg-gray-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent"/>
@@ -128,7 +134,7 @@
 
 
 
-                        <div class="sm:col-span-1">
+                        <div class="sm:col-span-1" v-if="isAdminOrDoctor">
                             <label for="time" class="block text-sm font-medium leading-6 text-gray-900">Patient Name</label>
                             <div class="mt-2">
                               <input id="time" v-model="selectedUser.fullname" name="time" type="text" readonly class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -150,7 +156,7 @@
                             </div>
                           </div>
 
-                          <div class="sm:col-span-1">
+                          <div class="sm:col-span-1" v-if="!isDoctor">
                                 <label for="doctor" class="block text-sm font-medium leading-6 text-gray-900">Doctor</label>
                                 <div class="mt-2">
                                 <select id="doctor" v-model="form.doc_id" name="doctor" @change="fetchServicesByDoctorId" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
@@ -160,6 +166,7 @@
                                 <div class="text-sm text-red-500 italic" v-if="form.errors.doc_id">{{ form.errors.doc_id }}</div>
                                 </div>
                           </div>
+
 
                           <div class="sm:col-span-2" >
                             <label for="service" class="block text-sm font-medium leading-6 text-gray-900">Services</label>

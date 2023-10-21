@@ -4,8 +4,9 @@
     import DangerButton from '@/Components/DangerButton.vue';
     import SecondaryButton from '@/Components/SecondaryButton.vue';
     import Pagination from '@/Components/Pagination.vue'
-    import { ref, watch } from 'vue';
+    import { ref, watch, onMounted, computed } from 'vue';
     import { useForm, Link, Head,router } from '@inertiajs/vue3'
+    import { Inertia } from '@inertiajs/inertia';
 
     let showConfirm = ref(false)
     let selectedCategoryForDelete = null
@@ -23,8 +24,11 @@
         medcategories: Object,
         filters:Object,
         errors: null,
+        flash: Object,
+
         // hidePagination: Boolean,
     })
+
 
     function edit(category) {
     form.name = category.name
@@ -67,6 +71,25 @@
             }
         );
     });
+
+
+    onMounted(() => {
+  // Set a timeout to hide the success flash message after 3 seconds
+  const successFlashMessage = document.getElementById('flash-success-message');
+  if (successFlashMessage) {
+    setTimeout(() => {
+      successFlashMessage.style.display = 'none';
+    }, 3000);
+  }
+
+  // Set a timeout to hide the error flash message after 3 seconds
+  const errorFlashMessage = document.getElementById('flash-error-message');
+  if (errorFlashMessage) {
+    setTimeout(() => {
+      errorFlashMessage.style.display = 'none';
+    }, 3000);
+  }
+});
 </script>
 
 <template>
@@ -74,7 +97,15 @@
     <Sidebar>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Category</h2>
+            <div v-if="$page.props.flash.success" id="flash-success-message" class="absolute top-20 right-1 p-4 bg-green-300 border border-gray-300 rounded-md shadow-md">
+                {{ $page.props.flash.success }}
+            </div>
+
+            <div v-if="$page.props.flash.error" id="flash-error-message" class=" absolute top-20 right-1 p-4 bg-red-300 border border-gray-300 rounded-md shadow-md">
+                {{ $page.props.flash.error }}
+            </div>
         </template>
+
 
         <div class="px-2 mt-5">
             <div class="bg-red-700 text-white p-4 rounded-lg my-3" v-if="errors && errors.GeneralErrors" >
