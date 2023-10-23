@@ -45,42 +45,84 @@ class AppointmentController extends Controller
         // Handle other roles or unauthorized access as needed
         return abort(403);
     }
-
     return inertia('Appointment/Index', [
         'appointments' => $appointments,
     ]);
 }
 
-    public function create(){
-        $doctors = Doctor::with(['services', 'user'])->get();
-        $services = Service::all();
-        $users = User::all();
-        $isAdminOrDoctor = auth()->user()->hasAnyRole(['admin', 'doctor']);
-        $isDoctor = auth()->user()->hasRole('doctor');
-        $selectedDoctor = null;
-        $availableServices = [];
+    // public function create(){
+    //     $doctors = Doctor::whereHas('user', function ($query) {
+    //         $query->where('status', 1);
+    //     })->with(['services', 'user'])->get();
+    //     $services = Service::all();
+    //     // $users = User::all();
+    //     $searchTerm = $request->input('term');
+    //     $users = User::where('status', 'active')
+    //     ->where(function ($query) use ($searchTerm) {
+    //         $query->where('firstname', 'like', "%$searchTerm%")
+    //               ->orWhere('lastname', 'like', "%$searchTerm%");
+    //     })
+    //     ->get();
+    //     $isAdminOrDoctor = auth()->user()->hasAnyRole(['admin', 'doctor']);
+    //     $isDoctor = auth()->user()->hasRole('doctor');
+    //     $selectedDoctor = null;
+    //     $availableServices = [];
 
-        if ($isDoctor) {
-            // If the user is a doctor, get their information
-            $selectedDoctor = Doctor::where('user_id', auth()->user()->id)->first();
-            $availableServices = $selectedDoctor->services;
-        }
-        // if ($isDoctor) {
-        //     $doctor = Doctor::where('user_id', auth()->user()->id)->first();
-        //     $services = $doctor->services;
-        // } else {
-        //     $services = Service::all();
-        // }
-        return inertia('Appointment/Create', [
-            'doctors' =>$doctors,
-            'services'=>$services,
-            'users'=>$users,
-            'isAdminOrDoctor' => $isAdminOrDoctor,
-            'isDoctor' => $isDoctor,
-            'selectedDoctor' => $selectedDoctor,
-            'availableServices' => $availableServices,
-        ]);
+    //     if ($isDoctor) {
+    //         // If the user is a doctor, get their information
+    //         $selectedDoctor = Doctor::where('user_id', auth()->user()->id)->first();
+    //         $availableServices = $selectedDoctor->services;
+    //     }
+
+    //     return inertia('Appointment/Create', [
+    //         'doctors' =>$doctors,
+    //         'services'=>$services,
+    //         'users'=>$users,
+    //         'isAdminOrDoctor' => $isAdminOrDoctor,
+    //         'isDoctor' => $isDoctor,
+    //         'selectedDoctor' => $selectedDoctor,
+    //         'availableServices' => $availableServices,
+    //     ]);
+    // }
+    public function create(Request $request)
+{
+    $doctors = Doctor::whereHas('user', function ($query) {
+        $query->where('status', 1);
+    })->with(['services', 'user'])->get();
+
+    $services = Service::all();
+
+    // Assuming you want to search for users based on a search term provided in the request
+    $searchTerm = $request->input('term');
+    $users = User::where('status', 'active')
+        ->where(function ($query) use ($searchTerm) {
+            $query->where('firstname', 'like', "%$searchTerm%")
+                ->orWhere('lastname', 'like', "%$searchTerm%");
+        })
+        ->get();
+
+    $isAdminOrDoctor = auth()->user()->hasAnyRole(['admin', 'doctor']);
+    $isDoctor = auth()->user()->hasRole('doctor');
+    $selectedDoctor = null;
+    $availableServices = [];
+
+    if ($isDoctor) {
+        // If the user is a doctor, get their information
+        $selectedDoctor = Doctor::where('user_id', auth()->user()->id)->first();
+        $availableServices = $selectedDoctor->services;
     }
+
+    return inertia('Appointment/Create', [
+        'doctors' => $doctors,
+        'services' => $services,
+        'users' => $users,
+        'isAdminOrDoctor' => $isAdminOrDoctor,
+        'isDoctor' => $isDoctor,
+        'selectedDoctor' => $selectedDoctor,
+        'availableServices' => $availableServices,
+    ]);
+}
+
 
     public function store(Request $request){
         $user = Auth::user();

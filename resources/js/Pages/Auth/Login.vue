@@ -14,6 +14,9 @@ defineProps({
     status: {
         type: String,
     },
+    flash: {
+        type:Object
+    }
 });
 
 const form = useForm({
@@ -21,6 +24,7 @@ const form = useForm({
     password: '',
     remember: false,
 });
+
 
 const submit = () => {
     form.post(route('login'), {
@@ -36,8 +40,8 @@ const submit = () => {
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
         <template #logo>
+
             <img src="images/mdc.jpg" alt="" class="object-cover h-5/6 w-full rounded-l-xl opacity-80">
 
             <div class="bg-gray-700 opacity-20 absolute top-0 h-full w-full"></div>

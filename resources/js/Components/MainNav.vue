@@ -5,14 +5,14 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
     defineProps({
         collapse:Boolean,
-        
+
     })
     let show = ref(false);
 
     const isOpen = () => {show.value = !show.value};
 
-   
-    
+
+
 </script>
 <template>
     <div>
@@ -21,7 +21,12 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
               <li class="px-5">
                 <div class="flex flex-row items-center h-8">
                   <div class="text-m font-light tracking-wide text-white" v-show="!collapse">
-                   Administrator
+                    <p class="font-semibold tracking-wide text-m text-white leading-tight">
+                        <span v-if="$page.props.auth.user.type  === 'admin'">Administrator</span>
+                        <span v-else-if="$page.props.auth.user.type === 'doctor'">Doctor</span>
+                        <span v-else-if="$page.props.auth.user.type === 'patient'">Patient</span>
+
+                      </p>
                   </div>
                 </div>
               </li>

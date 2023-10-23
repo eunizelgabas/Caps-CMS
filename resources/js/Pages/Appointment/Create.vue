@@ -40,7 +40,8 @@
         try {
             const response = await axios.get(`/api/users/search?term=${searchTerm.value}`);
             const data = response.data; // Assuming the API response contains the search results.
-            searchResults.value = data.users; // Update searchResults with the retrieved user data.
+            const activeUsers = data.users.filter(user => user.status === 1);
+            searchResults.value = activeUsers; // Update searchResults with the retrieved user data.
         } catch (error) {
             console.error('Error searching for users:', error);
         }
@@ -54,6 +55,7 @@
         selectedUser.fullname = `${user.firstname} ${user.lastname}`;
         form.user_id = user.id; // Populate the user_id field with the selected user's ID
 
+        searchTerm.value = '';
     };
 
     const fetchServicesByDoctorId = async () => {
@@ -84,6 +86,10 @@
     form.doc_id = doctor.id;
     availableServices.value = doctor.services;
   }
+});
+
+const filteredDoctors = computed(() => {
+    return props.doctors.filter(doctor => doctor.user.status === 1);
 });
 
     const submit = () =>{
@@ -161,7 +167,7 @@
                                 <div class="mt-2">
                                 <select id="doctor" v-model="form.doc_id" name="doctor" @change="fetchServicesByDoctorId" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
                                     <option selected disabled >Select doctor</option>
-                                    <option v-for="doc in doctors" :key="doc.id" :value="doc.id">{{ doc.user.firstname }} {{ doc.user.lastname }}</option>
+                                    <option v-for="doc in filteredDoctors" :key="doc.id" :value="doc.id">{{ doc.user.firstname }} {{ doc.user.lastname }}</option>
                                 </select>
                                 <div class="text-sm text-red-500 italic" v-if="form.errors.doc_id">{{ form.errors.doc_id }}</div>
                                 </div>

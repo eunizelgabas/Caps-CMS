@@ -30,12 +30,12 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        // 'canRegister' => Route::has('register'),
+        // 'laravelVersion' => Application::VERSION,
+        // 'phpVersion' => PHP_VERSION,
     ]);
     // return Inertia::render('Auth.Login');
-});
+})->middleware('checkUserStatus');
 
 // Route::post('/', [LoginController::class, 'login']);
 
@@ -43,7 +43,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['checkUserStatus', 'auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/doctor/create', [DoctorController::class, 'create'])->name('doctor.create');
     Route::get('/doctor',[DoctorController::class, 'index'])->name('doctor.index');
-    Route::post('/doctor',[DoctorController::class, 'store'])->name('doctor.create');
+    Route::post('/doctor',[DoctorController::class, 'store']);
     Route::get('/doctor/edit/{doctor}', [DoctorController::class, 'edit']);
     Route::put('/doctor/{doctor}',[DoctorController::class, 'update']);
     Route::delete('/doctor/{doctor}', [DoctorController::class, 'destroy']);
@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
     Route::get('/service',[ServiceController::class, 'index'])->name('service.index');
-    Route::post('/service',[ServiceController::class, 'store'])->name('service.create');
+    Route::post('/service',[ServiceController::class, 'store']);
     Route::get('/service/edit/{service}', [ServiceController::class, 'edit']);
     Route::put('/service/{service}',[ServiceController::class, 'update']);
     Route::delete('/service/{service}', [ServiceController::class, 'destroy']);

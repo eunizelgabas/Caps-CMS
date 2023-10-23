@@ -229,7 +229,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-2">Showing page {{ medcategories.current_page }} of {{ medcategories.last_page }}</div>
+                    <!-- <div class="mt-2">Showing page {{ medcategories.current_page }} of {{ medcategories.last_page }}</div> -->
                     <Pagination :links="medcategories.links" class="mt-6 text-center"/>
                 </div>
 
