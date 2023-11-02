@@ -1,9 +1,4 @@
 <script setup>
-
-</script>
-
-<template>
-    <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
     import Modal from  '@/Components/Modal.vue';
     import DangerButton from '@/Components/DangerButton.vue';
@@ -11,45 +6,30 @@
     import { ref } from 'vue';
     import { Link, router, useForm, Head } from '@inertiajs/vue3';
 
-    let showConfirm = ref(false)
-    let selectedUserForDelete = null
-    let deleteForm = useForm({});
-
     let props = defineProps({
-        users:Array,
+        patients: Object,
+        user: Object
 
-    })
+        })
 
-    function closeModal(){
-        showConfirm.value = false;
-    }
-
-    function remove(user) {
-        selectedUserForDelete = user
-        showConfirm.value = true;
-        // console.log(props.errors)
-    }
-
-    function deleteUser(){
-        deleteForm.delete('/users/' + selectedUserForDelete.id)
-        showConfirm.value = false;
-    }
-
-
+        const getUserAppointmentCount = (userId) => {
+      const user = props.user.find(user => user.id === userId);
+      return user ? user.appointment_count : 0;
+    };
 </script>
 
 <template>
     <Sidebar>
-        <Head title="Users"/>
+        <Head title="Patients"/>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Users</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Patients</h2>
         </template>
 
         <div class="px-2 mt-5">
             <div class="p-4 mx-2">
                 <div class="flex ">
                     <h1 class="text-3xl font-medium text-gray-700 "></h1>
-                    <Link href="/users/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >Add User</Link>
+                    <Link href="/patient/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >Add Patient</Link>
                 </div>
             <div class="w-full px-2">
                 <div class="h-12">
@@ -59,69 +39,45 @@
                         <table class="min-w-max w-full table-auto">
                             <thead>
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                    <th class="py-3 px-6 text-left">Id</th>
                                     <th class="py-3 px-6 text-center">FullName</th>
+                                    <th class="py-3 px-6 text-center">Total Appointment</th>
                                     <th class="py-3 px-6 text-center">Gender</th>
-                                    <th class="py-3 px-6 text-center">Type</th>
-                                    <th class="py-3 px-6 text-center">Email</th>
-                                    <th class="py-3 px-6 text-center">Contact No</th>
-                                    <th class="py-3 px-6 text-center">Role</th>
-                                    <th class="py-3 px-6 text-center">Status</th>
+                                    <th class="py-3 px-6 text-center">Address</th>
                                     <th class="py-3 px-6 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600 text-sm font-light" >
-
-                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="user in users" :key="user.id">
-                                    <td class="py-3 px-6 text-left whitespace-nowrap">
-                                        <div class="flex items-center">
-
-                                            <p class="font-medium">{{ user.id }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{user.firstname }} {{user.middlename}} {{ user.lastname}} {{ user.suffix }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ user.gender }}</p>
-                                        </div>
-                                    </td>
+                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="patient in patients" :key="patient.id">
 
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ user.type }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ user.email }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ user.contact_no }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <div class="flex items-center justify-center" v-for="role in user.roles" :key="role.id">
-                                            <p class="font-medium">{{ role.name }}</p>
+                                            <p class="font-medium">{{patient.user.firstname }} {{patient.user.middlename}} {{ patient.user.lastname}} {{ patient.user.suffix }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
                                             <p class="font-medium">
-                                                <span class=" remarks-cell bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ user.status ? 'Active' : 'Inactive' }}</span>
+                                                <span class=" remarks-cell bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{getUserAppointmentCount(patient.user.id)  }}</span>
                                             </p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
+                                        <div class="flex items-center justify-center">
+                                            <p class="font-medium">{{ patient.user.gender }}</p>
+                                        </div>
+                                    </td>
+
+                                    <td class="py-3 px-6 text-center">
+                                        <div class="flex items-center justify-center">
+                                            <p class="font-medium">{{ patient.address }}</p>
+                                        </div>
+                                    </td>
+
+                                    <td class="py-3 px-6 text-center">
                                         <div class="flex item-center justify-center">
                                             <div class="flex item-center justify-center">
                                                 <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                                    <Link :href="'/user/show/'+ user.id" title="Show Details">
+                                                    <Link :href="'/patient/show/'+ patient.id" title="Show Details">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -130,14 +86,14 @@
                                                 </div>
                                             </div>
                                             <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
-                                                <Link :href=" '/users/edit/' + user.id" class="btn" title="Edit Doctor">
+                                                <Link :href=" '/patient/edit/' + patient.id" class="btn" title="Edit Doctor">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                     </svg>
                                                 </Link>
                                             </div>
                                             <div class="w-4  ml-2 mr-2 transform hover:text-red-500 hover:scale-110">
-                                                <a href="#" @click="remove(user)" class="btn" title="Delete Category">
+                                                <a href="#" @click="remove(patient)" class="btn" title="Delete Category">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
@@ -169,6 +125,8 @@
                                         </div>
                                     </td>
                                 </tr>
+
+
                             </tbody>
                         </table>
                     </div>
@@ -180,4 +138,3 @@
     </Sidebar>
 </template>
 
-</template>

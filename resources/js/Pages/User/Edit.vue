@@ -1,6 +1,6 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
-    import { ref, watch } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
     import { Link , Head, usePage} from '@inertiajs/vue3';
     import { useForm } from '@inertiajs/vue3';
 
@@ -19,7 +19,11 @@
         role: props.currentRole,
         contact_no: props.user.contact_no,
         selectedServiceIds: [],
-        specialization: ""
+        specialization: "",
+        age: '',
+        address: '',
+        course: '',
+        vaccine: ''
     })
 
 
@@ -30,20 +34,43 @@ if (props.user.type === 'doctor' && props.user.doctor) {
     form.selectedServiceIds = props.user.doctor.services.map((service) => service.id);
 }
 
+if (props.user.type === 'patient' && props.user.patient) {
+    console.log('Patient Data:', props.user.patient);
+    form.age = props.user.patient.age;
+    form.course = props.user.patient.course;
+    form.address = props.user.patient.address;
+    form.vaccine = props.user.patient.vaccine;
+
+}
+
     let props = defineProps({
         user:Object,
         roles:Object,
         doctor: Object,
         services: Array,
-        currentRole: Object
+        currentRole: Object,
+        patient: Object
     })
 
-    function toggleFields(){
-        if (form.type !== 'doctor') {
-        form.specialization = '';
-        form.services = '';
-      }
+    function toggleFields() {
+        if (form.type === 'patient') {
+            form.age = '';
+            form.course = '';
+            form.vaccine = '';
+        } else if (form.type === 'doctor') {
+            form.specialization = '';
+            form.services = '';
+        }
     }
+    onMounted(() => {
+  const selectRole = document.getElementById('select-role');
+
+  if (selectRole) {
+    new TomSelect(selectRole, {
+      maxItems: 3,
+    });
+  }
+});
 
     const submit = () =>{
         form.put('/users/'+props.user.id)
@@ -57,7 +84,7 @@ if (props.user.type === 'doctor' && props.user.doctor) {
     <Head title="Create User"/>
     <Sidebar>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create User</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit User</h2>
         </template>
         <div>
             <div class="w-full mt-10 mx-auto px-4 ">
@@ -163,16 +190,65 @@ if (props.user.type === 'doctor' && props.user.doctor) {
                               <div class="text-sm text-red-500 italic" v-if="form.errors.specialization">{{ form.errors.specialization }}</div>
                             </div>
                           </div>
-                          <div class="m:col-span-1" v-if="form.type === 'doctor'">
-                            <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
+                          <!-- <div class="m:col-span-1" v-if="form.type === 'doctor'">
+                                <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
+                                <div class="mt-2">
+                                    <select id="services" v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
+                                        <option selected disabled >Select services</option>
+                                        <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
+                                    </select>
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.service_id">{{ form.errors.service_id }}</div>
+                                </div>
+                          </div> -->
+                          <div class="m:col-span-2" v-show="form.type === 'doctor'">
+                            <label for="services" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
                             <div class="mt-2">
-                                <select id="services" v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
-                                    <option selected disabled >Select services</option>
+
+                                <select
+                                    id="select-role"
+                                    name="selectedServiceIds[]"
+                                    multiple
+                                    placeholder="Select services..."
+                                    autocomplete="off"
+                                    v-model="form.selectedServiceIds"
+                                    class="block w-full rounded-sm cursor-pointer focus:outline-none"
+
+                                    >
+                                    <option selected disabled>Select a service</option>
                                     <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
-                                  </select>
-                              <div class="text-sm text-red-500 italic" v-if="form.errors.service_id">{{ form.errors.service_id }}</div>
+
+                                </select>
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.services">{{ form.errors.services }}</div>
                             </div>
-                          </div>
+                        </div>
+                          <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                            <label for="age" class="block text-sm font-medium leading-6 text-gray-900">Age</label>
+                            <div class="mt-2">
+                            <input id="age" v-model="form.age" name="age" type="text" autocomplete="age" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <div class="text-sm text-red-500 italic" v-if="form.errors.age">{{ form.errors.age }}</div>
+                            </div>
+                        </div>
+                        <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                            <label for="course" class="block text-sm font-medium leading-6 text-gray-900">Course</label>
+                            <div class="mt-2">
+                            <input id="course" v-model="form.course" name="course" type="text" autocomplete="course" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <div class="text-sm text-red-500 italic" v-if="form.errors.course">{{ form.errors.course }}</div>
+                            </div>
+                        </div>
+                        <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                            <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Address</label>
+                            <div class="mt-2">
+                            <input id="address" v-model="form.address" name="address" type="text" autocomplete="address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <div class="text-sm text-red-500 italic" v-if="form.errors.address">{{ form.errors.address }}</div>
+                            </div>
+                        </div>
+                        <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                            <label for="vaccine" class="block text-sm font-medium leading-6 text-gray-900">Vaccine</label>
+                            <div class="mt-2">
+                            <input id="vaccine" v-model="form.vaccine" name="vaccine" type="text" autocomplete="vaccine" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <div class="text-sm text-red-500 italic" v-if="form.errors.vaccine">{{ form.errors.vaccine }}</div>
+                            </div>
+                        </div>
 
 
                           <div class="sm:col-span-1">

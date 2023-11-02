@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('med_id')->unsigned();
             $table->integer('qty');
             $table->timestamps();
-            $table->foreign('med_id')->references('id')->on('medicines');
+            $table->foreign('med_id')->references('id')->on('medicines')->onDelete('cascade');
         });
     }
 

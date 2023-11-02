@@ -19,21 +19,30 @@
         role: '',
         specialization: '',
         contact_no: '',
-        selectedServiceIds: []
+        selectedServiceIds: [],
+        age: '',
+        address: '',
+        course: '',
+        vaccine: ''
     })
 
     let props = defineProps({
         roles:Array,
         doctor:Object,
-        services: Array
+        services: Array,
+        patient: Object
 
     })
 
-    function toggleFields(){
-        if (form.type !== 'doctor') {
-        form.specialization = '';
-        form.services = '';
-      }
+    function toggleFields() {
+        if (form.type === 'patient') {
+            form.age = '';
+            form.course = '';
+            form.vaccine = '';
+        } else if (form.type === 'doctor') {
+            form.specialization = '';
+            form.services = '';
+        }
     }
 
     onMounted(() => {
@@ -174,7 +183,34 @@
                                 </div>
                             <!-- </div> -->
 
-
+                            <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                                <label for="age" class="block text-sm font-medium leading-6 text-gray-900">Age</label>
+                                <div class="mt-2">
+                                <input id="age" v-model="form.age" name="age" type="text" autocomplete="age" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.age">{{ form.errors.age }}</div>
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                                <label for="course" class="block text-sm font-medium leading-6 text-gray-900">Course</label>
+                                <div class="mt-2">
+                                <input id="course" v-model="form.course" name="course" type="text" autocomplete="course" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.course">{{ form.errors.course }}</div>
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                                <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Address</label>
+                                <div class="mt-2">
+                                <input id="address" v-model="form.address" name="address" type="text" autocomplete="address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.address">{{ form.errors.address }}</div>
+                                </div>
+                            </div>
+                            <div class="sm:col-span-1" v-if="form.type === 'patient'">
+                                <label for="vaccine" class="block text-sm font-medium leading-6 text-gray-900">Vaccine</label>
+                                <div class="mt-2">
+                                <input id="vaccine" v-model="form.vaccine" name="vaccine" type="text" autocomplete="vaccine" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <div class="text-sm text-red-500 italic" v-if="form.errors.vaccine">{{ form.errors.vaccine }}</div>
+                                </div>
+                            </div>
                             <div class="sm:col-span-1">
                                 <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                                 <div class="mt-2">

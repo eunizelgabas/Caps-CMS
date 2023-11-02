@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('qty');
             $table->date('expiry_date');
             $table->timestamps();
-            $table->foreign('med_id')->references('id')->on('medicines');
+            $table->foreign('med_id')->references('id')->on('medicines')->onDelete('cascade');
         });
     }
 

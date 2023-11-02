@@ -20,8 +20,8 @@ return new class extends Migration
             // $table->string('description');
             $table->integer('stock')->default(0);
             $table->timestamps();
-            $table->foreign('cat_id')->references('id')->on('med_categories');
-            $table->foreign('type_id')->references('id')->on('med_types');
+            $table->foreign('cat_id')->references('id')->on('med_categories')->onDelete('cascade');
+            $table->foreign('type_id')->references('id')->on('med_types')->onDelete('cascade');
         });
     }
 

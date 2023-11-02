@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('physical_forms', function (Blueprint $table) {
+        Schema::create('radiologics', function (Blueprint $table) {
             $table->id();
+            $table->string('exam_results');
             $table->timestamps();
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('physical_forms');
+        Schema::dropIfExists('radiologics');
     }
 };

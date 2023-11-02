@@ -194,7 +194,14 @@
                             </tbody>
                         </table>
                     </div>
-                    <Pagination :links="medtypes.links" class="mt-6 text-center"/>
+                    <!-- <Pagination :links="medtypes.links" class="mt-6 text-center"/> -->
+                    <div v-show="medtypes.data.length < 1" class="flex flex-col w-full mt-9">
+                        <h1 class="text-center text-xl text-gray-400 mb-6">No medicine type found</h1>
+                        <!-- <img src="../../Components/images/no-result.png" alt="no result" class="w-[250px] opacity-25 mx-auto"> -->
+                    </div>
+
+                    <!-- Paginator -->
+                    <Pagination v-if="medtypes.data.length > 0" :links="medtypes.links" class="mt-6"/>
                 </div>
             </div>
 

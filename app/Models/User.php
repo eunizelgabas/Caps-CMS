@@ -28,22 +28,10 @@ class User extends Authenticatable
         'type',
         'email',
         'password',
-        'status'
+        'status',
+
 
     ];
-
-    // public function sale()
-    // {
-    //     return $this->hasMany(Sale::class, 'user_id');
-    // }
-
-    // public function doctor(){
-    //     return $this->hasMany(Doctor::class, 'user_id');
-    // }
-
-    // public function appointment(){
-    //     return $this->hasMany(Appointment::class);
-    // }
 
     public function doctor()
     {
@@ -51,9 +39,14 @@ class User extends Authenticatable
     }
 
     public function appointment()
-        {
-            return $this->hasMany(Appointment::class, 'user_id');
-        }
+    {
+        return $this->hasMany(Appointment::class, 'user_id');
+    }
+
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
+    }
 
         // public function hasRole($role)
         // {

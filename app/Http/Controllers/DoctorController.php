@@ -56,7 +56,7 @@ class DoctorController extends Controller
             // Create a new doctor associated with the user
             $doctor = new Doctor([
                 'specialization' => $request->input('specialization'),
-                'status' => 1, // You can adjust the status here or in the Doctor model as needed.
+
             ]);
 
 
@@ -75,7 +75,7 @@ class DoctorController extends Controller
 
 
     public function edit(Doctor $doctor){
-        $doctor = Doctor::with('user')->find($doctor->id);
+        $doctor = Doctor::with('user', 'services')->find($doctor->id);
         $services = Service::all();
 
         return inertia('Doctor/Edit', ['doctor' => $doctor, 'services' => $services]);
@@ -114,18 +114,6 @@ class DoctorController extends Controller
     public function destroy(Doctor $doctor)
     {
         $doctor->delete();
-        return redirect()->route('doctor.index');
-    }
-
-    public function activate(Doctor $doctor)
-    {
-        $doctor->update(['status' => true]);
-        return redirect()->route('doctor.index');
-    }
-
-    public function deactivate(Doctor $doctor)
-    {
-        $doctor->update(['status' => false]);
         return redirect()->route('doctor.index');
     }
 

@@ -230,7 +230,14 @@
                         </table>
                     </div>
                     <!-- <div class="mt-2">Showing page {{ medcategories.current_page }} of {{ medcategories.last_page }}</div> -->
-                    <Pagination :links="medcategories.links" class="mt-6 text-center"/>
+                    <!-- <Pagination :links="medcategories.links" class="mt-6 text-center"/> -->
+                    <div v-show="medcategories.data.length < 1" class="flex flex-col w-full mt-9">
+                        <h1 class="text-center text-xl text-gray-400 mb-6">No user found</h1>
+                        <!-- <img src="../../Components/images/no-result.png" alt="no result" class="w-[250px] opacity-25 mx-auto"> -->
+                    </div>
+
+                    <!-- Paginator -->
+                    <Pagination v-if="medcategories.data.length > 0" :links="medcategories.links" class="mt-6"/>
                 </div>
 
             </div>

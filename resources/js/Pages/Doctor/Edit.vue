@@ -1,6 +1,6 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { Link, Head } from '@inertiajs/vue3';
     import { useForm } from '@inertiajs/vue3';
 
@@ -15,9 +15,9 @@
         contact_no: props.doctor.user.contact_no || '',
         gender: props.doctor.user.gender || '',
         specialization: props.doctor.specialization || '',
-        selectedServiceIds: []
-        // selectedServiceIds: props.doctors[0].services.map(service => service.id) || [],
-
+        // selectedServiceIds: []
+        // selectedServiceIds: props.doctor[0].services.map(service => service.id) || [],
+        selectedServiceIds: props.doctor.services.map((service) => service.id)
         // contact_no: props.users.contact_no,
 
     })
@@ -27,6 +27,16 @@
         // user:Array,
         services: Array
     })
+
+    onMounted(() => {
+  const selectRole = document.getElementById('select-role');
+
+  if (selectRole) {
+    new TomSelect('#select-role', {
+        maxItems: 3,
+      });
+  }
+});
 
     const submit = () =>{
         form.put('/doctor/'+ props.doctor.id);
@@ -91,16 +101,27 @@
                           <div class="m:col-span-2">
                             <label for="services" class="block text-sm font-medium leading-6 text-gray-900">Services</label>
                             <div class="mt-2">
-                                <select id="services"  v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
+                                <!-- <select id="services" v-model="form.selectedServiceIds" name="selectedServiceIds[]" multiple  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 m:max-w-xs sm:text-sm sm:leading-6" >
                                   <option selected disabled >Select services</option>
                                   <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
+                                </select> -->
+                                <select
+                                    id="select-role"
+                                    name="selectedServiceIds[]"
+                                    multiple
+                                    placeholder="Select services..."
+                                    autocomplete="off"
+                                    v-model="form.selectedServiceIds"
+                                    class="block w-full rounded-sm cursor-pointer focus:outline-none"
+
+                                    >
+                                    <option selected disabled>Select a service</option>
+                                    <option v-for="service in services" :key="service.id" :value="service.id">{{ service.name }}</option>
+
                                 </select>
                                 <div class="text-sm text-red-500 italic" v-if="form.errors.services">{{ form.errors.services }}</div>
                               </div>
-
-
                           </div>
-
                           <div class="sm:col-span-2">
                             <label for="contact_no" class="block text-sm font-medium leading-6 text-gray-900">Contact No</label>
                             <div class="mt-2">

@@ -5,8 +5,10 @@ use App\Http\Controllers\DispensingController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MedCategoryController;
+use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedTypeController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
@@ -111,7 +113,17 @@ Route::middleware(['checkUserStatus', 'auth'])->group(function () {
     Route::get('/users/edit/{user}', [UserController::class, 'edit']);
     Route::put('/users/{user}',[UserController::class, 'update']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
-});
 
+    Route::get('/patient',[PatientController::class, 'index'])->name('patient.index');
+    Route::get('/patient/create', [PatientController::class, 'create'])->name('patient.create');
+    Route::post('/patient',[PatientController::class, 'store'])->name('patient.store');
+    Route::get('/patient/edit/{patient}', [PatientController::class, 'edit']);
+    Route::put('/patient/{patient}',[PatientController::class, 'update']);
+    Route::delete('/patient/{patient}', [PatientController::class, 'destroy']);
+    Route::get('/patient/show/{patient}', [PatientController::class, 'show']);
+
+    Route::get('/form',[MedicalHistoryController::class, 'index']);
+    Route::post('/form',[MedicalHistoryController::class, 'store']);
+});
 
 require __DIR__.'/auth.php';

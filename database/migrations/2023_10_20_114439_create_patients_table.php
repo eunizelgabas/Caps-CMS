@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->bigInteger('doc_id')->unsigned();
-            $table->date('DOB');
+            $table->integer('age');
             $table->string('address');
-            $table->string('emergency_contact');
+            $table->string('course');
+            $table->string('vaccine')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

@@ -15,19 +15,9 @@ use Illuminate\Support\Facades\Gate;
 
 class AppointmentController extends Controller
 {
-    // public function index(){
-    //     $appointments = Appointment::with(['doctor', 'doctor.user', 'user', 'service'])->get();
-    //     $doctor = Doctor::with(['user', 'services'])->get();
-    //     $user = User::all();
-    //     return inertia('Appointment/Index', [
-    //         'appointments' => $appointments,
-    //         'doctor' => $doctor,
-    //         'user' => $user
-    //     ]);
 
-    // }
     public function index()
-{
+    {
     $user = auth()->user();
 
     if ($user->hasRole('admin')) {
@@ -50,40 +40,7 @@ class AppointmentController extends Controller
     ]);
 }
 
-    // public function create(){
-    //     $doctors = Doctor::whereHas('user', function ($query) {
-    //         $query->where('status', 1);
-    //     })->with(['services', 'user'])->get();
-    //     $services = Service::all();
-    //     // $users = User::all();
-    //     $searchTerm = $request->input('term');
-    //     $users = User::where('status', 'active')
-    //     ->where(function ($query) use ($searchTerm) {
-    //         $query->where('firstname', 'like', "%$searchTerm%")
-    //               ->orWhere('lastname', 'like', "%$searchTerm%");
-    //     })
-    //     ->get();
-    //     $isAdminOrDoctor = auth()->user()->hasAnyRole(['admin', 'doctor']);
-    //     $isDoctor = auth()->user()->hasRole('doctor');
-    //     $selectedDoctor = null;
-    //     $availableServices = [];
 
-    //     if ($isDoctor) {
-    //         // If the user is a doctor, get their information
-    //         $selectedDoctor = Doctor::where('user_id', auth()->user()->id)->first();
-    //         $availableServices = $selectedDoctor->services;
-    //     }
-
-    //     return inertia('Appointment/Create', [
-    //         'doctors' =>$doctors,
-    //         'services'=>$services,
-    //         'users'=>$users,
-    //         'isAdminOrDoctor' => $isAdminOrDoctor,
-    //         'isDoctor' => $isDoctor,
-    //         'selectedDoctor' => $selectedDoctor,
-    //         'availableServices' => $availableServices,
-    //     ]);
-    // }
     public function create(Request $request)
 {
     $doctors = Doctor::whereHas('user', function ($query) {

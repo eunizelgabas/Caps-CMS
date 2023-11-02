@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,21 +70,45 @@ class UserController extends Controller
             // Attach selected services to the doctor
             $doctor->services()->attach($selectedServiceIds);
         }
+
+        if ($type === 'patient') {
+            // Handle the "patient" type here.
+            $age = $request->input('age');
+            $course = $request->input('course');
+            $vaccine = $request->input('vaccine');
+            $address = $request->input('address');
+
+
+            // Create a new patient associated with the user
+            $patient = new Patient([
+                'age' => $age,
+                'course' => $course,
+                'vaccine' => $vaccine,
+                'address' => $address
+            ]);
+
+            // Save the patient first to get an ID.
+            $user->patient()->save($patient);
+
+
+        }
         return redirect()->route('user.index');
     }
 
     public function edit(User $user){
         // $user = User::with('roles')->find($user->id);
         $roles = Role::all();
-         $user->load('doctor', 'doctor.services', 'roles')->find($user->id);
+         $user->load('doctor','patient', 'doctor.services', 'roles')->find($user->id);
         $services = Service::all();
         $doctor = Doctor::with('user', 'services')->get();
+        $patient = Patient::with('user')->get();
         return inertia('User/Edit', [
             'user' => $user,
             'roles' => $roles,
             'services' => $services,
             'doctor' => $doctor,
             'currentRole' => $user->roles->first()->name,
+            'patient' => $patient,
         ]);
     }
 
@@ -162,6 +187,38 @@ class UserController extends Controller
             // If the user's type is not 'doctor,' you can delete the doctor record
             $user->doctor()->delete();
         }
+
+        if ($data['type'] === 'patient') {
+            $age = $request->input('age');
+            $course = $request->input('course');
+            $vaccine = $request->input('vaccine');
+            $address = $request->input('address');
+
+            // Fetch the patient record associated with the user (if it exists)
+            $patient = $user->patient;
+
+            // Update the patient's data
+            if ($patient) {
+                $patient->age = $age;
+                $patient->course = $course;
+                $patient->vaccine = $vaccine;
+                $patient->address = $address;
+                $patient->save();
+            } else {
+                // If the patient record doesn't exist, create a new one
+                $patient = new Patient([
+                    'age' => $age,
+                    'course' => $course,
+                    'vaccine' => $vaccine,
+                    'address' => $address
+                ]);
+                $user->patient()->save($patient);
+            }
+        } else {
+            // If the user's type is not 'patient,' you can delete the patient record
+            $user->patient()->delete();
+        }
+
 
 
         return redirect()->route('user.index');
