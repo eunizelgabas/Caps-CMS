@@ -176,7 +176,7 @@
                     <div class="bg-white p-6 mt-12 shadow-sm">
                         <div class="flex justify-between ">
                             <h4 class="text-2xl mb-3">History And Physical Form</h4>
-                            <Link href="/form" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >+</Link>
+                            <Link :href="'/healthForm/create/'+patient.id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mr-4" >+</Link>
                         </div>
                         <table class="w-full text-sm text-left text-black-500 dark:text-gray-400">
                             <thead class="text-xs text-white uppercase text-center bg-gray-50 dark:bg-blue-500 dark:text-white-400">

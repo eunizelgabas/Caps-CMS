@@ -16,5 +16,9 @@ class Patient extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function form(){
+        return $this->hasMany(Form::class);
+    }
+
 
 }

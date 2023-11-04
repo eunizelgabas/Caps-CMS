@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('remarks', function (Blueprint $table) {
             $table->id();
             $table->string('remarks');
+            $table->bigInteger('form_id')->unsigned();
+            $table->foreign('form_id')->references('id')->on('forms');
             $table->timestamps();
         });
     }

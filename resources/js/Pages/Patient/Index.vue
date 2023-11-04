@@ -98,7 +98,7 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
                                                 </a>
-                                                <Modal :show="showConfirm" @close="closeModal">
+                                                <Modal >
                                                     <div class="p-4 sm:p-10 text-center overflow-y-auto">
                                                         <!-- Icon -->
                                                         <span class="mb-4 inline-flex justify-center items-center w-[62px] h-[62px] rounded-full border-4 border-red-50 bg-red-100 text-red-500">
@@ -116,8 +116,8 @@
                                                         </p>
 
                                                         <div class="mt-6 flex justify-center gap-x-4">
-                                                            <SecondaryButton @click="closeModal">Cancel</SecondaryButton>
-                                                            <DangerButton @click="deleteUser()">Delete</DangerButton>
+                                                            <SecondaryButton >Cancel</SecondaryButton>
+                                                            <DangerButton>Delete</DangerButton>
                                                         </div>
                                                     </div>
                                                 </Modal>

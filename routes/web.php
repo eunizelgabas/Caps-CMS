@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DispensingController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MedCategoryController;
 use App\Http\Controllers\MedicalHistoryController;
@@ -124,6 +125,9 @@ Route::middleware(['checkUserStatus', 'auth'])->group(function () {
 
     Route::get('/form',[MedicalHistoryController::class, 'index']);
     Route::post('/form',[MedicalHistoryController::class, 'store']);
+
+    Route::get('/healthForm/create/{patient}', [FormController::class, 'create']);
+    Route::post('/healthForm',[FormController::class, 'store']);
 });
 
 require __DIR__.'/auth.php';

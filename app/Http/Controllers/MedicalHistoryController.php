@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MedicalHistoryController extends Controller
 {
     public function index(){
         $medicalhistory = MedicalHistory::all();
+        $patientUser = Auth::user();
         return inertia('Medical/Index', [
-            'medicalhistory'=> $medicalhistory
+            'medicalhistory'=> $medicalhistory,
+            'patientUser' => $patientUser,
         ]);
     }
 

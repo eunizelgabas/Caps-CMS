@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('chronic')->comment("1-yes, 0-no");
             $table->boolean('diabetes')->comment("1-yes, 0-no");
             $table->boolean('dysmenorrhea')->comment("1-yes, 0-no");
+            $table->boolean('fainting')->comment("1-yes, 0-no");
             $table->boolean('deafness')->comment("1-yes, 0-no");
             $table->boolean('endocrine')->comment("1-yes, 0-no");
             $table->boolean('frequent_headache')->comment("1-yes, 0-no");
@@ -33,11 +34,13 @@ return new class extends Migration
             $table->boolean('skeletal_disorder')->comment("1-yes, 0-no");
             $table->boolean('nervous_breakdown')->comment("1-yes, 0-no");
             $table->boolean('nose_trouble')->comment("1-yes, 0-no");
-            $table->boolean('peptio_ulcer')->comment("1-yes, 0-no");
+            $table->boolean('peptic_ulcer')->comment("1-yes, 0-no");
             $table->boolean('tuberculosis')->comment("1-yes, 0-no");
             $table->boolean('hospitalization')->comment("1-yes, 0-no");
             $table->boolean('surgical_operation')->comment("1-yes, 0-no");
+            $table->bigInteger('form_id')->unsigned();
             $table->timestamps();
+            $table->foreign('form_id')->references('id')->on('forms');
         });
     }
 
