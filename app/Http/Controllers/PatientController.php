@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\Form;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -64,12 +65,12 @@ class PatientController extends Controller
 
         // Retrieve the appointments for the user (patient)
         $patientAppointments = Appointment::with(['doctor.user','service'])->where('user_id', $user->id)->get();
-
+        $form = Form::with('patient.user', 'doctor.user')->where('pat_id', $patient->id)->get();
         return inertia ('Patient/Show',
             [
                 'patient' => $patient,
                 'patientAppointments' => $patientAppointments,
-
+                'form' => $form
             ]);
     }
 }

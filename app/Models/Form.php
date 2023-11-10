@@ -11,11 +11,11 @@ class Form extends Model
     protected $fillable = ['doc_id', 'pat_id', 'date'];
 
     public function patient(){
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'pat_id');
     }
 
     public function doctor(){
-        return $this->belongsTo(Doctor::class);
+        return $this->belongsTo(Doctor::class, 'doc_id');
     }
 
     public function medicalhistory(){

@@ -128,6 +128,9 @@ Route::middleware(['checkUserStatus', 'auth'])->group(function () {
 
     Route::get('/healthForm/create/{patient}', [FormController::class, 'create']);
     Route::post('/healthForm',[FormController::class, 'store']);
+    Route::get('/healthForm/show/{form}',[FormController::class, 'show']);
+    Route::get('/healthForm/pdf/{form}',[FormController::class, 'formPdf']);
+    Route::get('/generate-pdf/{patient}', [FormController::class, 'medCert']);
 });
 
 require __DIR__.'/auth.php';
