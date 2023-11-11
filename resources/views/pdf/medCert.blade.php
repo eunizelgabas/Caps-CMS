@@ -37,23 +37,16 @@
 
         </div>
     </div> --}}
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <img src="{{ public_path('images/mdclogo.png') }}" alt="" style="max-width: 100%; height: auto;">
-            </div>
-            <div class="col-md-10 text-center">
-                <div class="intro">
-                    <h2>{{ $title }}</h2>
-                    <p style="font-size: 20px">{{ $address }}</p>
-                    <p style="font-size: 20px">{{ $facility }}</p>
-                    <h2>{{ $header }}</h2>
-                </div>
-            </div>
+     <div style="">
+        <img src="{{ public_path('images/mdclogo.png') }}" alt="" style="max-width: 100%; height: auto; display: inline-block; margin-right: 20px;">
+        <div class="intro" style="display: inline-block; margin-left:20%;">
+            <h2>{{ $title }}</h2>
+            <p style="font-size: 20px">{{ $address }}</p>
+            <p style="font-size: 20px">{{ $facility }}</p>
+            <h2>{{ $header }}</h2>
         </div>
-    </div>
 
+        </div>
 
 
 
@@ -89,8 +82,11 @@
 
 <style>
     * {
-        font-family: Arial, Helvetica, sans-serif
+        font-family: Arial, Helvetica, sans-serif;
 
+    }
+    body{
+        margin: {{ 0.5 * 72 }}pt;
     }
     image{
 
