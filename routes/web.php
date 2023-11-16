@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DispensingController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\FormController;
@@ -11,9 +12,9 @@ use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedTypeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SampleAppController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
-use App\Http\Controllers\TemporaryStockController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,15 +39,22 @@ Route::get('/', function () {
         // 'phpVersion' => PHP_VERSION,
     ]);
     // return Inertia::render('Auth.Login');
-})->middleware('checkUserStatus');
+})->middleware('checkUserStatus')->name('login');
+
+Route::get('/app', [SampleAppController::class,  'app'])->name('app');
+Route::post('/app', [SampleAppController::class,  'store']);
 
 // Route::post('/', [LoginController::class, 'login']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware(['checkUserStatus', 'auth'])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -67,6 +75,8 @@ Route::middleware(['checkUserStatus', 'auth'])->group(function () {
     Route::delete('/medicine/{medicine}', [MedicineController::class, 'destroy']);
 
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    // Route::get('/api/inventory', [InventoryController::class, 'getData'])->name('inventory.getData');
+    // Route::get('/medicine/{medId}/totals', [InventoryController::class, 'getMedicinePurchaseAndDispense']);
 
     Route::get('/stock/create', [StockController::class, 'create'])->name('inventory.create');
 

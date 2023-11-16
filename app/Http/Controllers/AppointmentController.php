@@ -152,4 +152,10 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointment.index');
     }
+
+    public function calendar(){
+        $appointments = Appointment::all();
+        return response()->json($appointments);
+    }
+
 }

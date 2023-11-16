@@ -112,35 +112,35 @@
                 {{ errors.GeneralErrors }}
             </div>
             <div class="flex -mx-2">
-            <div class="w-1/3 px-2">
-                <div class="h-12">
-                    <div class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-                        <div class="max-w-md mx-auto">
-                          <div class="flex items-center space-x-5">
-                            <div class="block pl-2 font-semibold text-xl self-start text-gray-700">
-                              <h2 class="leading-relaxed">Medicine Category Form</h2>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="divide-y divide-gray-200">
-                                <form class="" @submit.prevent="submit">
-                                    <div class="py-5 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                                        <div class="flex flex-col">
-                                            <label class="leading-loose">Category</label>
-                                            <input type="text" v-model="form.name" id="name" class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="e.g. antibiotics">
-                                            <div class="text-sm text-red-500 italic" v-if="form.errors.name">{{ form.errors.name }}</div>
-                                        </div>
+                <div class="w-full md:w-1/2 lg:w-1/3 px-2">
+                    <div class="h-auto">
+                        <div class="relative px-4 py-10 bg-white mx-2 md:mx-0 shadow rounded-3xl sm:p-10">
+                            <div class="max-w-md mx-auto">
+                                <div class="flex items-center space-x-5">
+                                    <div class="block pl-2 font-semibold text-xl self-start text-gray-700">
+                                        <h2 class="leading-relaxed">Medicine Category Form</h2>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="divide-y divide-gray-200">
+                                    <form class="" @submit.prevent="submit">
+                                        <div class="py-5 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                                            <div class="flex flex-col">
+                                                <label class="leading-loose">Category</label>
+                                                <input type="text" v-model="form.name" id="name" class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="e.g. antibiotics">
+                                                <div class="text-sm text-red-500 italic" v-if="form.errors.name">{{ form.errors.name }}</div>
+                                            </div>
                                         </div>
                                         <div class="pt-4 flex items-center space-x-4">
-
                                             <button type="submit" class="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Save</button>
                                         </div>
-                                </form>
-                          </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
                 </div>
-            </div>
+
             <div class="w-3/4 px-2">
 
                 <div class="h-12">
@@ -229,15 +229,19 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- <div class="mt-2">Showing page {{ medcategories.current_page }} of {{ medcategories.last_page }}</div> -->
+
                     <!-- <Pagination :links="medcategories.links" class="mt-6 text-center"/> -->
                     <div v-show="medcategories.data.length < 1" class="flex flex-col w-full mt-9">
-                        <h1 class="text-center text-xl text-gray-400 mb-6">No user found</h1>
+                        <h1 class="text-center text-xl text-gray-400 mb-6">No Med Category found</h1>
                         <!-- <img src="../../Components/images/no-result.png" alt="no result" class="w-[250px] opacity-25 mx-auto"> -->
                     </div>
 
                     <!-- Paginator -->
-                    <Pagination v-if="medcategories.data.length > 0" :links="medcategories.links" class="mt-6"/>
+                    <div class="flex justify-between">
+                        <div class="mt-2" v-if="medcategories.data.length > 0">Showing page {{ medcategories.current_page }} of {{ medcategories.last_page }}</div>
+                        <Pagination v-if="medcategories.data.length > 0" :links="medcategories.links" class="mt-6"/>
+                    </div>
+
                 </div>
 
             </div>

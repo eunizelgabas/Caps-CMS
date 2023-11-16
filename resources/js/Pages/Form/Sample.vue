@@ -5,7 +5,8 @@
     import { Link, router, useForm, Head } from '@inertiajs/vue3';
 
     let form = useForm({
-
+            hist: '',
+            exam_results: '',
             allergy: '',
             amoebiasis:'',
             anemia:'',
@@ -115,6 +116,33 @@
         patient: Object,
         doctor: Array,
     })
+
+
+
+    // const handleFileChange = (event) => {
+    //   // Handle the file change event and update form.exam_results
+    //   // Assuming form is a reactive property defined in your setup
+    //   // You should adjust this based on your specific setup
+    //   form.exam_results = event.target.files[0];
+    // };
+
+    const imagePreview = ref(null);
+
+    const handleFileChange = (event) => {
+      const selectedFile = event.target.files[0];
+
+      // Update the form data
+      form.value.exam_results = selectedFile;
+
+      // Generate image preview URL
+      if (selectedFile.value) {
+        imagePreview.value = URL.createObjectURL(selectedFile.value);
+      } else {
+        imagePreview.value = null;
+      }
+
+    };
+
     const submit = () =>{
         form.post('/healthForm')
     }
@@ -571,6 +599,11 @@
                         </table>
                     </div>
                 </div>
+                <h2 class="text-xl mt-3">B. <span class="underline">History</span> </h2>
+                <div class="mt-2 flex items-center">
+                    <textarea type="text"  v-model="form.hist" name="hist" id="hist" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+
+                </div>
                  <h2 class="text-xl mt-3">C. <span class="underline">Physical Examination</span> </h2>
                 <div class=" py-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 mx-auto">
                     <div class="sm:col-span-1">
@@ -825,7 +858,7 @@
                                 <td class="border border-gray-300 p-2">Lungs</td>
                                 <td class="border border-gray-300 p-2 text-center">
                                     <input type="radio" id="lungs-normal" v-model="form.lungs" value="1">
-
+                                    <label for="lungs-normal" class="custom-checkbox"></label>
                                 </td>
                                 <td class="border border-gray-300 p-2 text-center">
                                     <input type="radio" id="lungs-abnormal" v-model="form.lungs" value="0">
@@ -854,7 +887,7 @@
                                     <label for="abdomen-abnormal" class="custom-checkbox"></label>
                                 </td>
                                 <td class="border border-gray-300 p-2">
-                                    <label for="lungs-normal" class="custom-checkbox">
+                                    <label for="lungs-normal">
                                         <input
                                         type="text"
                                         v-model="form.abdomen_findings"
@@ -877,7 +910,7 @@
                                     <input type="radio" id="back-abnormal" v-model="form.back" value="0">
                                     <label for="back-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal">
                                     <input
                                     type="text"
                                     v-model="form.back_findings"
@@ -899,7 +932,7 @@
                                     <input type="radio" id="anus-abnormal" v-model="form.anus" value="0">
                                     <label for="anus-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal">
                                     <input
                                     type="text"
                                     v-model="form.anus_findings"
@@ -922,7 +955,7 @@
                                     <input type="radio" id="gut-abnormal" v-model="form.gut" value="0">
                                     <label for="gut-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" >
                                     <input
                                     type="text"
                                     v-model="form.gut_findings"
@@ -944,7 +977,7 @@
                                     <input type="radio" id="inguinals-abnormal" v-model="form.inguinals" value="0">
                                     <label for="inguinals-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal">
                                     <input
                                     type="text"
                                     v-model="form.inguinals_findings"
@@ -966,7 +999,7 @@
                                     <input type="radio" id="reflexes-abnormal" v-model="form.reflexes" value="0">
                                     <label for="reflexes-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal">
                                     <input
                                     type="text"
                                     v-model="form.reflexes_findings"
@@ -988,7 +1021,7 @@
                                     <input type="radio" id="extremities-abnormal" v-model="form.extremities" value="0">
                                     <label for="extremities-abnormal" class="custom-checkbox"></label>
                                 </td>
-                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" class="custom-checkbox">
+                                <td class="border border-gray-300 p-2"> <label for="lungs-normal" >
                                     <input
                                     type="text"
                                     v-model="form.extremities_findings"
@@ -1011,7 +1044,7 @@
                                     <label for="dental-abnormal" class="custom-checkbox"></label>
                                 </td>
                                 <td class="border border-gray-300 p-2">
-                                    <label for="lungs-normal" class="custom-checkbox">
+                                    <label for="lungs-normal" >
                                         <input
                                         type="text"
                                         v-model="form.dental_findings"
@@ -1073,6 +1106,33 @@
                     </div>
 
                 </div>
+                <h2 class="text-xl mt-3">D. <span class="underline">Radiologic and Laboratories Examination Results</span> </h2>
+                    <div class="w-full relative border-2 mt-5 border-gray-300 border-dashed rounded-lg p-6" id="dropzone">
+                        <input type="file"  @change="handleFileChange" class="absolute inset-0 w-full h-full opacity-0 z-50" />
+                        <div class="text-center">
+                            <!-- <img class="mx-auto h-12 w-12" src="https://www.svgrepo.com/show/357902/image-upload.svg" alt=""> -->
+                            <img v-if="imagePreview" :src="imagePreview" alt="Selected Image" style="max-width: 100%; max-height: 200px;" />
+
+                            <img v-else class="mx-auto h-12 w-12" src="https://www.svgrepo.com/show/357902/image-upload.svg" alt="">
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">
+                                <label for="file-upload" class="relative cursor-pointer">
+                                    <span>Drag and drop</span>
+                                    <span class="text-indigo-600"> or browse </span>
+                                    <span>to upload</span>
+                                    <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                                </label>
+                            </h3>
+                            <p class="mt-1 text-xs text-gray-500">
+                                PNG, JPG, PDF up to 10MB
+                            </p>
+                        </div>
+
+                        <!-- <img :src="displayPreview" :class="{ hidden: !previewSrc }" class="mt-4 mx-auto max-h-40 hidden" id="preview">
+                        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                            {{ form.progress.percentage }}%
+                        </progress> -->
+                    </div>
+
                  <h2 class="text-xl mt-3">E. <span class="underline">Remarks</span> </h2>
                 <div class="py-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-1 mx-auto">
                     <div class="sm:col-span-1">
@@ -1098,3 +1158,27 @@
 </template>
 
 
+<style scoped>
+
+.custom-checkbox {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  /* Hide the actual radio buttons */
+  input[type="radio"] {
+    display: none;
+  }
+
+  /* Style the checked state of the custom checkboxes */
+  input[type="radio"]:checked + label.custom-checkbox {
+    background-color: #007BFF; /* Change to your preferred color */
+    border: 1px solid #007BFF; /* Change to your preferred color */
+  }
+</style>

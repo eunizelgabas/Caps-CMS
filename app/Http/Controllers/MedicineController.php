@@ -12,17 +12,33 @@ use Illuminate\Support\Facades\Request as HttpRequest;
 
 class MedicineController extends Controller
 {
-    public function index(){
-        $type = MedType::orderBy('name')->get();
-        $category = MedCategory::orderBy('name')->get();
+    public function index(Request $request)
+    {
+        $types = MedType::orderBy('name')->get();
+        $categories = MedCategory::orderBy('name')->get();
         $inventory = Inventory::orderBy('created_at', 'asc')->get();
 
-            $medicineQuery = Medicine::orderBy('created_at', 'desc')
+        $selectedCategory = $request->input('category');
+        $selectedType = $request->input('type');
+
+        $medicineQuery = Medicine::orderBy('created_at', 'desc')
             ->with('type')
             ->with('category')
             ->with('inventory');
 
-        $search = HttpRequest::input('search');
+        if ($selectedCategory) {
+            $medicineQuery->whereHas('category', function ($query) use ($selectedCategory) {
+                $query->where('name', $selectedCategory);
+            });
+        }
+
+        if ($selectedType) {
+            $medicineQuery->whereHas('type', function ($query) use ($selectedType) {
+                $query->where('name', $selectedType);
+            });
+        }
+
+        $search = $request->input('search');
         if ($search) {
             $medicineQuery->where(function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
@@ -32,14 +48,17 @@ class MedicineController extends Controller
 
         $medicines = $medicineQuery->paginate(8)->withQueryString();
 
-        return inertia('Medicine/Index',[
+        return inertia('Medicine/Index', [
             'medicines' => $medicines,
-            'type'      => $type,
-            'category'  => $category,
-            'inventory' =>$inventory,
-            'filters' => HttpRequest::only(['search'])
-            ]);
+            'types' => $types,
+            'categories' => $categories,
+            'selectedType' => $selectedType,
+            'selectedCategory' => $selectedCategory,
+            'inventory' => $inventory,
+            'filters' => $request->only(['search']),
+        ]);
     }
+
 
 
     public function store(Request $request) {
@@ -62,7 +81,7 @@ class MedicineController extends Controller
         }else{
             $inventory = new Inventory([
                 'med_id' => $med->id,
-                'stock_in' => $med->stock,    
+                'stock_in' => $med->stock,
             ]);
             $inventory->save();
         }

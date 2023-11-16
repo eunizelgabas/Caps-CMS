@@ -134,7 +134,10 @@
             </div>
 
             </div>
+
         </div>
+
     </Sidebar>
+
 </template>
 

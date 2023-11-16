@@ -31,7 +31,7 @@ const isCollapsed = ref(false);
 <template>
     <div class="relative flex min-h-screen">
 
-        <div class="bg-blue-500 text-white w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 md:relative md:-translate-x-0 transform -translate-x-full transition duration-200 ease-in-out " :class="width">
+        <div class="bg-indigo-500 text-white w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 md:relative md:-translate-x-0 transform -translate-x-full transition duration-200 ease-in-out " :class="width">
             <button class="text-xl text-white " @click="toggleWidth" style="position: absolute; right: 10px; top:10px">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -40,19 +40,19 @@ const isCollapsed = ref(false);
             </button>
 
             <!--Sidebar-->
-            <div id="branding" class="mt-2" :class="hidden" >
-                <div class="flex items-center justify-center h-14 mb-5 border-gray-800">
+            <div id="branding" class="mt-2" >
+                <div class="flex items-center justify-center h-14 border-gray-800" :class="hidden">
                     <img src="/images/mdclogo.png" alt="" class="w-[70px] h-[70px] rounded-full object-cover">
                     <span class="text-xl font-extrabold text-white my-5 px-4">MDC-CMS</span>
-                    </div>
+                </div>
 
-                <hr class="border-gray-90">
-
+                <hr class="border-gray-90 mt-5">
+                <MainNav :collapse="isCollapsed"/>
             </div>
-            <MainNav :collapse="isCollapsed"/>
+
         </div>
 
-        <div class="flex-1 min-h-screen">
+        <div class="flex-1 min-h-screen ">
             <!-- <div class="bg-white shadow px-2 py-4 hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">Header</div> -->
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -186,7 +186,13 @@ const isCollapsed = ref(false);
             <main>
                 <slot />
             </main>
+
         </div>
 
     </div>
+    <footer class="footer footer-center text-center p-4 bg-base-300 text-base-content">
+        <aside>
+            <p>Copyright © 2023 - All right reserved by The Bot Project</p>
+        </aside>
+    </footer>
 </template>

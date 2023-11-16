@@ -15,22 +15,31 @@
         />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link
-  rel="stylesheet"
-  href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
-/>
+            rel="stylesheet"
+            href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+            />
+
 <!-- Material Icons Link -->
-<link
-  href="https://fonts.googleapis.com/icon?family=Material+Icons"
-  rel="stylesheet"
-/>
- <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
+        <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+        />
+        <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    <body class="" style="font-family: 'Poppins', sans-serif;
+    ">
         @inertia
     </body>
 </html>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+</style>

@@ -1,11 +1,12 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
-    import Modal from  '@/Components/Modal.vue';
+    import Pagination from  '@/Components/Pagination.vue';
     import DangerButton from '@/Components/DangerButton.vue';
     import SecondaryButton from '@/Components/SecondaryButton.vue';
-    import { ref } from 'vue';
-    import { useForm, Link } from '@inertiajs/vue3';
-import moment from 'moment';
+    import { ref, onMounted, watch } from 'vue';
+    import { useForm, Link, router } from '@inertiajs/vue3';
+    import moment from 'moment';
+
 
     let showConfirm = ref(false)
     let selectedDispenseForDelete = null
@@ -22,7 +23,8 @@ import moment from 'moment';
 
     let props = defineProps({
         dispenses: Array,
-        medicine:Object
+        medicine:Object,
+        filters: Object
     })
 
     function edit(des) {
@@ -61,12 +63,45 @@ import moment from 'moment';
     function formattedDate(date){
         return moment(date).format('MMMM   D, YYYY');
     }
+    const errorMessage = ref('');
+
+    // onMounted(() => {
+    //   // Check if there are validation errors and set the error message
+    //   if (this.$page.props && this.$page.props.errors) {
+    //     const errorKeys = Object.keys(this.$page.props.errors);
+
+    //     if (errorKeys.length > 0) {
+    //       // Take the first error message of the first key
+    //       errorMessage.value = this.$page.props.errors[errorKeys[0]][0];
+    //     }
+    //   }
+    // });
+    let search = ref(props.filters.search);
+    watch(search, (value) => {
+        router.get(
+        "/dispense",
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    });
 </script>
 
 <template>
     <Sidebar>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Medicine Dispense</h2>
+            <div v-if="$page.props.flash.success" id="flash-success-message" class="absolute top-20 right-1 p-4 bg-green-300 border border-gray-300 rounded-md shadow-md">
+                {{ $page.props.flash.success }}
+            </div>
+            <div v-if="$page.props.flash.error" id="flash-error-message" class=" absolute top-20 right-1 p-4 bg-red-300 border border-gray-300 rounded-md shadow-md">
+                {{ $page.props.flash.error }}
+            </div>
+            <!-- <div v-if="errorMessage" id="flash-error-message" class=" absolute top-20 right-1 p-4 bg-red-300 border border-gray-300 rounded-md shadow-md">
+                {{ errorMessage }}
+            </div> -->
         </template>
 
         <div class="px-2 mt-5">
@@ -117,6 +152,21 @@ import moment from 'moment';
                 <div class="h-12">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <!-- <div class="p-6 text-gray-900">You're logged in!</div> -->
+                        <div class="mt-4 mb-3 mr-0 mb-0 ml-0 sm:mt-0">
+                            <p class="sr-only">Search</p>
+                            <div class="relative">
+                                <div class="flex items-center pt-0 pr-0 pb-0 pl-3 absolute inset-y-0 left-0 pointer-events-none">
+                                    <p>
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21
+                                        21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    </p>
+                                </div>
+                                <input placeholder="Search" type="search" class="border block pt-2 pr-0 pb-2 pl-10 py-2
+                                    border-blue-300 rounded-lg focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+                                    v-model="search"/>
+                            </div>
+                        </div>
                         <table class="min-w-max w-full table-auto">
                             <thead>
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -129,7 +179,7 @@ import moment from 'moment';
                             </thead>
                             <tbody class="text-gray-600 text-sm font-light" >
 
-                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="des in dispenses" :key="des.id">
+                                <tr  class="border-b border-gray-200 hover:bg-gray-100" v-for="des in dispenses.data" :key="des.id">
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
                                             <p class="font-medium">{{ des.name }}</p>
@@ -196,6 +246,11 @@ import moment from 'moment';
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="mt-2" v-if="dispenses.data.length > 0">Showing page {{ dispenses.current_page }} of {{ dispenses.last_page }}</div>
+                        <Pagination v-if="dispenses.data.length > 0" :links="dispenses.links" class="mt-6 text-center"/>
+                        <!-- <Pagination v-if="medtypes.data.length > 0" :links="medtypes.links" class="mt-6"/> -->
                     </div>
                 </div>
             </div>

@@ -19,22 +19,22 @@ class Form extends Model
     }
 
     public function medicalhistory(){
-        return $this->hasMany(MedicalHistory::class);
+        return $this->hasOne(MedicalHistory::class);
     }
 
     public function history(){
-        return $this->hasMany(History::class);
+        return $this->hasOne(History::class);
     }
 
     public function physicalexamination(){
-        return $this->hasMany(PhysicalExamination::class);
+        return $this->hasOne(PhysicalExamination::class);
     }
 
     public function radiologic(){
-        return $this->hasMany(Radiologic::class);
+        return $this->hasOne(Radiologic::class);
     }
 
     public function remark(){
-        return $this->hasMany(Remarks::class);
+        return $this->hasOne(Remarks::class);
     }
 }

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('radiologics', function (Blueprint $table) {
+        Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('exam_results')->nullable();
-            $table->bigInteger('form_id')->unsigned();
-            $table->foreign('form_id')->references('id')->on('forms');
+            $table->integer('student_no')->unique();
+            $table->string('firstname');
+            $table->string('lastname');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('radiologics');
+        Schema::dropIfExists('students');
     }
 };

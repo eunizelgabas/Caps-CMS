@@ -1,33 +1,32 @@
 <script setup>
     import Sidebar from '@/Layouts/Sidebar.vue';
     import ConfirmDialog from '@/Components/ConfirmDialog.vue';
+    import Sample from '@/Components/Sample.vue';
     import { ref } from 'vue';
     import { Link, useForm,Head } from '@inertiajs/vue3';
     import moment from 'moment'
-    
 
-    let showConfirm = ref(false)
-    let selectedInventoryForDelete = null
-    let selectedInventory = null
 
 
     let form = useForm({
         med_id: '',
         stocks: '',
+        filteredInventory:props.inventory
     })
 
-    
 
     let props = defineProps({
         inventories: Array,
-        medicine: Object,
-        totalAvail : Number
+        // medicine: Object,
+
     })
 
 
     function formattedDate(date){
         return moment(date).format('MMMM   D, YYYY');
     }
+
+
 </script>
 
 <template>
@@ -40,8 +39,9 @@
         <div class="px-2 mt-5">
             <div class="p-4 mx-2">
                 <!-- <div class="flex justify-between">
-                    <h1 class="text-3xl font-medium text-gray-700 "></h1>
-                    <Link href="/inventory/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2" >Add Stock</Link>
+                    <p>Filter Date</p>
+                    <input type="date" v-model="startDate" />
+                    <input type="date" v-model="endDate" />
                 </div> -->
             <div class="w-full px-2">
                 <div class="h-12">
@@ -69,7 +69,7 @@
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex items-center justify-center">
-                                            <p class="font-medium">{{ inv.medicine.name }}</p>
+                                            <p class="font-medium">{{ inv.medicine?.name }}</p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-center">
@@ -96,8 +96,15 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <br>
+                        <!-- <div>
+                            <Sample></Sample>
+                        </div> -->
                     </div>
                 </div>
+            </div>
+            <div>
+
             </div>
 
             </div>

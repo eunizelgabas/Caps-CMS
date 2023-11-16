@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->string('history')->nullable();
+            $table->string('hist')->nullable();
             $table->bigInteger('form_id')->unsigned();
             $table->foreign('form_id')->references('id')->on('forms');
             $table->timestamps();

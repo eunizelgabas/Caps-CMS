@@ -10,14 +10,28 @@ use Illuminate\Http\Request;
 class StockController extends Controller
 {
 
-    public function index(){
-        $medicine = Medicine::orderBy('name')->get();
-        $stocks   = Stock::orderBy('id')->with('medicine')->get();
-        return inertia('Stock/Index',[
-            'medicine' => $medicine,
-            'stocks'    =>$stocks
-        ]);
+    public function index(Request $request)
+{
+    $medicine = Medicine::orderBy('name')->get();
+
+    $stockQuery = Stock::orderBy('id')->with('medicine');
+
+    $search = $request->input('search');
+    if ($search) {
+        $stockQuery->whereHas('medicine', function ($medicineQuery) use ($search) {
+            $medicineQuery->where('name', 'like', '%' . $search . '%');
+        });
     }
+
+    $stocks = $stockQuery->paginate(8)->withQueryString();
+
+    return inertia('Stock/Index', [
+        'medicine' => $medicine,
+        'stocks'   => $stocks,
+        'filters'  => $request->only(['search']),
+    ]);
+}
+
 
     public function create(){
         $medicine = Medicine::orderBy('name')->get();
@@ -51,7 +65,7 @@ class StockController extends Controller
             $inventory = new Inventory([
                 'med_id' => $medicine->id,
                 'stock_in' => $stock->qty,
-                
+
             ]);
             $inventory->save();
         }
@@ -78,5 +92,11 @@ class StockController extends Controller
 
 
         return redirect('/inventory')->with('message', "You successfully updated the medicine inventory");
+    }
+
+    public function destroy(Stock $stock) {
+        $stock->delete();
+
+        return back();
     }
 }
